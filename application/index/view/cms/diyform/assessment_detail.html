@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+
+    <script src="/assets/libs/jquery/dist/jquery.js"></script>
+    <script src="/assets/libs/fastadmin-layer/dist/layer.js"></script>
+    <script>
+        layer.ready(function() {
+            layui.use('table', function () {
+                var table = layui.table;
+
+                //第一个实例
+                table.render({
+                    elem: '#demo'
+                    , height: 312
+                    , url: '/cms/c/guide.html?id=49&diyname=guide' //数据接口
+                    , page: true //开启分页
+                    , cols: [[ //表头
+                        {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
+                        , {field: 'title', title: '用户名', width: 80}
+                    ]]
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+
+<table id="demo" lay-filter="test"></table>
+
+</body>
+</html>

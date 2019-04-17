@@ -1,0 +1,21 @@
+<ul class="list-group">
+    <li class="list-group-heading">{:__('内容管理')}</li>
+    <!--如果需要直接跳转对应的模型(比如我的新闻,我的产品,发布新闻,发布产品)，可以在链接后加上 ?model_id=模型ID -->
+    <li class="list-group-item {:$actionname=='my'?'active':''}"><a href="{:url('index/cms.archives/my')}"><i class="fa fa-list fa-fw"></i> {:__('我发布的文章')}</a></li>
+    <li class="list-group-item {:$actionname=='post'?'active':''}"><a href="{:url('index/cms.archives/post')}"><i class="fa fa-pencil fa-fw"></i> {:__('发布文章')}</a></li>
+</ul>
+<ul class="list-group">
+    <li class="list-group-heading">{:__('项目评估')}</li>
+    <!--如果需要直接跳转对应的模型(比如我的新闻,我的产品,发布新闻,发布产品)，可以在链接后加上 ?model_id=模型ID -->
+    <li class="list-group-item {:$actionname=='assessment_list'?'active':''}"><a href="{:url('index/cms.diyform/assessment_list')}"><i class="fa fa-list fa-fw"></i> {:__('我的项目评估')}</a></li>
+</ul>
+<ul class="list-group">
+    <li class="list-group-heading">{:__('研发辅助账系统')}</li>
+    <!--如果需要直接跳转对应的模型(比如我的新闻,我的产品,发布新闻,发布产品)，可以在链接后加上 ?model_id=模型ID -->
+    <li class="list-group-item {:$actionname=='research'?'active':''}"><a href="{:url('index/cms.rdsystem/research')}"><i class="fa fa-bookmark-o fa-fw"></i> {:__('明细账')}</a></li>
+    <li class="list-group-item {:$actionname=='project'?'active':''}"><a href="{:url('index/cms.rdsystem/project')}"><i class="fa fa-bookmark fa-fw"></i> {:__('研发项目情况')}</a></li>
+    <li class="list-group-item {:$actionname=='costdetail'?'active':''}"><a href="{:url('index/cms.rdsystem/costdetail')}"><i class="fa fa-tasks fa-fw"></i> {:__('研发费用明细')}</a></li>
+    <li class="list-group-item {:$actionname=='structlist'?'active':''}"><a href="{:url('index/cms.rdsystem/structlist')}"><i class="fa fa-table fa-fw"></i> {:__('结构明细表')}</a></li>
+    <li class="list-group-item {:$actionname=='reporting'?'active':''}"><a href="{:url('index/cms.rdsystem/reporting')}"><i class="fa fa-table fa-fw"></i> {:__('报表导出')}</a></li>
+
+</ul>

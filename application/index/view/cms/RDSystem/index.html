@@ -1,0 +1,247 @@
+<style>
+    .panel-post {
+        position: relative;
+    }
+    #post-form .panel-default {
+        padding:0;
+    }
+</style>
+
+<link rel="stylesheet" href="__CDN__/assets/libs/bootstrap-select/dist/css/bootstrap-select.min.css">
+<div class="container mt-20">
+    <div id="content-container" class="container">
+        <div class="row">
+            <div class="col-md-3">
+                {include file="common/sidenav" /}
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-user">
+                    <div class="panel-body">
+                        <div class="page-header panel-post">
+                            <h2>{$diyform.title}</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <form id="post-form" class="form-horizontal" role="form" data-toggle="validator" action="">
+                                    <input type="hidden" name="__diyname__" value="{$diyform['diyname']}">
+                                    <input type="hidden" name="type" value="{$type}">
+                                    <input type="hidden" name="id" value="{$id}">
+                                    {:token()}
+                                    {include file="cms/common/fields" /}
+
+                                    <div class="form-group normal-footer">
+                                        <label class="control-label col-xs-12 col-sm-2"></label>
+                                        <div class="col-xs-12 col-sm-8">
+                                            <input type="button" href="javascript:;" class="btn btn-success btn-embossed" value="{:__('OK')}">
+                                            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/libs/jquery/dist/jquery.min.js"></script>
+<script>
+    $('.btn-success').click(function () {
+        var diyname = $('input[name=__diyname__]').val();
+        var data = $("#post-form").serializeArray();
+        var index = layer.load(1, {
+            shade: [0.1,'#fff'], //0.1透明度的白色背景
+        });
+        switch (diyname) {
+            case 'Research':
+                $.ajax(
+                    {
+                        type: "post",
+                        url: "{:url('index/cms.rdsystem/add')}",
+                        data: data,
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    //icon: 1,//提示的样式
+                                    time: 500, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                                    end: function () {
+                                        $("input[name=__token__]").val(data.data.token);
+                                    }
+                                });
+                                layer.close(index);
+                                return;
+                            } else if (data.code == 1) {
+                                layer.close(index);
+                                layer.msg(data.msg, {
+                                    //icon: 1,//提示的样式
+                                    time: 500, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                                    end: function () {
+                                        location.href = "{:url('index/cms.rdsystem/Research')}";
+                                    }
+                                });
+                            } else {
+                                layer.close(index);
+                                layer.msg('未知错误', {time: 500});
+                            }
+                        }
+                    }
+                );
+                break;
+            case 'Project':
+                $.ajax(
+                    {
+                        type: "post",
+                        url: "{:url('index/cms.rdsystem/add')}",
+                        data: data,
+                        success: function (data) {
+                            console.log(data);
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    //icon: 1,//提示的样式
+                                    time: 500, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                                    end: function () {
+                                        $("input[name=__token__]").val(data.data.token);
+                                    }
+                                });
+                                layer.close(index);
+                                return;
+                            } else if (data.code == 1) {
+                                layer.close(index);
+                                layer.msg(data.msg, {
+                                    //icon: 1,//提示的样式
+                                    time: 500, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                                    end: function () {
+                                        location.href = "{:url('index/cms.rdsystem/project')}";
+                                    }
+                                });
+                            } else {
+                                layer.close(index);
+                                layer.msg('未知错误', {time: 500});
+                            }
+                        }
+                    }
+                );
+                break;
+            case 'Assessment':
+                $.ajax(
+                    {
+                        type: "post",
+                        url: "{:url('index/cms.diyform/post')}",
+                        data: data,
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    //icon: 1,//提示的样式
+                                    time: 500, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                                    end: function () {
+                                        $("input[name=__token__]").val(data.data.token);
+                                    }
+                                });
+                                layer.close(index);
+                                return;
+                            }
+                            if (data.length !== 0) {
+                                layer.close(index);
+                                layer.msg('评估成功', {
+                                    //icon: 1,//提示的样式
+                                    time: 500, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                                    end: function () {
+                                        location.href = "{:url('index/cms.diyform/assessment_list')}";
+                                    }
+                                });
+                            } else {
+                                layer.close(index);
+                                layer.msg('找不到匹配项目', {time: 2000});
+                            }
+                        }
+                    }
+                );
+                break;
+            default:
+                layer.msg('模型不存在', {time: 2000});
+                break
+        }
+
+    });
+
+
+    //编辑赋值
+    $(function () {
+        var id = $('input[name=id]').val();
+        var diyname = $('input[name=__diyname__]').val();
+        switch (diyname) {
+            case 'Research':
+                if(id!==''){
+                    $.ajax({
+                        url:"{:url('index/cms.rdsystem/detail')}",
+                        type:'get',
+                        data : {id:id,diyname:diyname},
+                        success : function(data){
+                            $("#c-Date").val(data['Date']);//凭证日期
+                            $("#c-Document_number").val(data['Document_number']);//凭证号
+                            $("#c-Acct_Tit").val(data['Acct_Tit']);//会计科目
+                            $("#c-Abstract").val(data['Abstract']);//摘要
+                            $("#c-Debit_amount").val(data['Debit_amount']);//借方金额
+                            $("#c-Credit_amount").val(data['Credit_amount']);//贷方金额
+                            $("select[name='row[Category]']").val(data['Category']);//费用类别
+                        }
+                    });
+                }
+                break;
+            case 'Project':
+                if(id!==''){
+                    $.ajax({
+                        url:"{:url('index/cms.rdsystem/detail')}",
+                        type:'get',
+                        data : {id:id,diyname:diyname},
+                        success : function(data){
+                            $("#c-project_name").val(data['project_name']);//研发项目名称
+                            $("#c-QH34").val(data['QH34']);//项目起始日期
+                            $("#c-QH35").val(data['QH35']);//项目结束日期
+                            $("#c-Budget").val(data['Budget']);//研发经费总预算
+                            $("select[name='row[QH11]']").val(data['QH11']);//项目来源
+                            $("#c-Directinput_materials").val(data['Directinput_materials']);//直接投入费用—材料费
+                            $("#c-Laborcosts_services").val(data['Laborcosts_services']);//人员人工费用—外聘研发人员的劳务费
+                            $("#c-Laborcosts_si").val(data['Laborcosts_si']);//人员人工费用—五险一金
+                            $("#c-Laborcosts_salary").val(data['Laborcosts_salary']);//人员人工费用—工资薪金
+                        }
+                    });
+                }
+                break;
+            case 'Assessment':
+                if(id!==''){
+                    $.ajax({
+                        url:"{:url('index/cms.diyform/get_xmps')}",
+                        type:'get',
+                        data : {id:id},
+                        success : function(data){
+                            $("#c-company").val(data['company']);//公司名
+                            $("#c-regtime").val(data['regtime']);//注册时间
+                            $("#c-Ratal").val(data['Ratal']);//纳税额
+                            $("#c-Researchput").val(data['Researchput']);//研发投入
+                            $("#c-SalesProceeds").val(data['SalesProceeds']);//上年度销售收入
+                            $("#c-Brandput").val(data['Brandput']);//品牌投入
+                            $("#c-Equipmentput").val(data['Equipmentput']);//设备投入
+                            $("#c-Informationization").val(data['Informationization']);//信息化投入
+                            $("select[name='row[District]']").val(data['District']);//公司所在区
+                            //产业类型
+                            if(data['fields']!==''){
+                                var fields = data['fields'].split(',');
+                                var fileds_name = 'row[fields][]';
+                                $.each(fields,function (index,val) {
+                                    $("input[name='"+fileds_name+"'][value="+val+"]").prop("checked",true);
+                                });
+                            }
+
+                        }
+                    });
+                }
+                break;
+        }
+
+    })
+
+</script>

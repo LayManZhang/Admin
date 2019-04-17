@@ -1,0 +1,317 @@
+<style>
+    .panel-post {
+        position: relative;
+    }
+
+    .btn-post {
+        position: absolute;
+        right: 0;
+        bottom: 10px;
+    }
+
+    .img-border {
+        border-radius: 5px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    input[type="file"]{
+        display: none;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0 auto;
+    }
+
+    table, tr, td {
+        border: 1px solid black;
+    }
+
+    td {
+        text-align: center;
+        height: 54px; /*这里需要自己调整，根据自己的需求调整高度*/
+        min-width: 70px;
+        position: relative;
+    }
+    td[class=first]{
+        width: 150px;
+        height: 109px;
+    }
+    td[class=first]:before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height: 159px;
+        top: 0;
+        left: 0;
+        background-color: #000;
+        display: block;
+        transform: rotate(-70deg);
+        transform-origin: top;
+        -ms-transform: rotate(-75deg);
+        -ms-transform-origin: top;
+    }
+    td[class=first]:after {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height: 132px;
+        top: 0;
+        left: 0;
+        background-color: #000;
+        display: block;
+        transform: rotate(-35deg);
+        transform-origin: top;
+        -ms-transform: rotate(-45deg);
+        -ms-transform-origin: top;
+    }
+    .title1{
+        position: absolute;
+        top: 8px;
+        right:3px;
+    }
+    .title2{
+        position: absolute;
+        top: 70px;
+        right:15px;
+    }
+    .title3 {
+        position: absolute;
+        top: 80px;
+        left: 2px;
+    }
+</style>
+<script src="/assets/libs/jquery/dist/jquery.js"></script>
+<script src="/assets/libs/fastadmin-layer/dist/layer.js"></script>
+
+<div class="container mt-20 list">
+    <div id="content-container" class="container">
+        <div class="row">
+            <div class="col-md-3">
+                {include file="common/sidenav" /}
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-user">
+                    <div class="panel-body">
+                        <div class="page-header panel-post">
+                            <h2>高新技术企业研发费用明细表</h2>
+                        </div>
+
+                        <div class="row" style="text-align: center">
+                            <h3><span class="title">2013</span>年度研究开发费用结构明细表(万元)
+                                <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出')}" id="btn-export-file" onclick="Export();"><i class="fa fa-download"></i> {:__('导出')}</a>-->
+                                <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出')}" id="btn-export-file-hgj" onclick="ExportGj();"><i class="fa fa-download"></i> {:__('费用归集导出')}</a>-->
+                                <br>
+                            年份<select id="Selectyear">
+                                <option>2019</option>
+                                <option>2018</option>
+                                <option selected>2017</option>
+                                <option>2016</option>
+                            </select>
+
+                            <br>
+                            <br>
+                            <table style="font-size: 10px;">
+                                <thead>
+                                <tr id="ttitle">
+                                    <td class="first" rowspan="2" id="first">
+                                        <span class="title1">研发项目编号</span><br><span class="title2">累积发生额</span><br><span class="title3">科目</span>
+                                    </td>
+                                    <td rowspan="2" style="width: 80px;" id="total">总计</td>
+                                </tr>
+                                <tr id="project_name">
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="totalA">内部研究开发费用</td>
+                                        <td id="totalAtotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="ryrgfy">其中：人员人工费用</td>
+                                        <td id="ryrgfytotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="zjtrfy">             直接投入费用</td>
+                                        <td id="zjtrfytotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="zjfy">             折旧费用与长期待摊费用</td>
+                                        <td id="zjfytotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="zbfy">             无形资产摊销费用</td>
+                                        <td id="zbfytotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="wxzctx">             设计费用</td>
+                                        <td id="wxzctxtotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="xcpsjf">             装备调试费用与试验费用</td>
+                                        <td id="xcpsjftotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="other">             其他费用</td>
+                                        <td id="othertotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="wtyffy">委托外部研究开发费用</td>
+                                        <td id="wtyffytotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="jnyffy">   其中：境内的外部研发费用</td>
+                                        <td id="jnyffytotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="yftrhj">研究开发费用(内、外部)小计</td>
+                                        <td id="yftrhjtotal"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        fetch();
+        var type_text = $("#Selectyear").find("option:selected").text();
+        $('.title').text(type_text);
+        $("#Selectyear").on('change',function () {
+            fetch();
+            let type_text = $(this).find("option:selected").text();
+            $('.title').text(type_text);
+        });
+        
+
+
+    });
+
+    function Export(){
+        let year = $("#Selectyear").val();
+        location.href="/index/cms.rdsystem/exportJgmx?year="+year;
+    }
+
+    function ExportGj(){
+        let year = $("#Selectyear").val();
+        location.href="/index/cms.rdsystem/exportCollect?year="+year;
+    }
+
+    function fetch() {
+        var year = $("#Selectyear").val();
+        $.ajax({
+            url:"{:url('index/cms.rdsystem/structlist')}",
+            type:'get',
+            data : {year:year},
+            success : function(data) {
+                //empty
+                $('#first').nextUntil("#total").remove();
+                $('#project_name').empty();
+                $('#ryrgfy').nextUntil("#ryrgfytotal").remove();
+                $('#zjtrfy').nextUntil("#zjtrfytotal").remove();
+                $('#zjfy').nextUntil("#zjfytotal").remove();
+                $('#wxzctx').nextUntil("#wxzctxtotal").remove();
+                $('#xcpsjf').nextUntil("#xcpsjftotal").remove();
+                $('#zbfy').nextUntil("#zbfytotal").remove();
+                $('#other').nextUntil("#othertotal").remove();
+                $('#wtyffy').nextUntil("#wtyffytotal").remove();
+                $('#jnyffy').nextUntil("#jnyffytotal").remove();
+                $('#yftrhj').nextUntil("#yftrhjtotal").remove();
+                $('#jnyfhj').nextUntil("#jnyfhjtotal").remove();
+                $('#totalA').nextUntil("#totalAtotal").remove();
+                //project
+                var ttitle = '';
+                var tproject = '';
+                var ryrgfyTD = '';
+                var zjtrfyTD = '';
+                var zjfyTD = '';
+                var wxzctxTD = '';
+                var xcpsjfTD = '';
+                var zbfyTD = '';
+                var otherTD = '';
+                var wtyffyTD = '';
+                var jnyffyTD = '';
+                var yftrhjTD = '';
+                var jnyfhjTD = '';
+                var totalATD = '';
+
+                var ryrgfytotal = 0;
+                var zjtrfytotal = 0;
+                var zjfytotal = 0;
+                var wxzctxtotal = 0;
+                var xcpsjftotal = 0;
+                var zbfytotal = 0;
+                var othertotal = 0;
+                var wtyffytotal = 0;
+                var jnyffytotal = 0;
+                var yftrhjtotal = 0;
+                var jnyfhjtotal = 0;
+                var totalAtotal = 0;
+                $.each(data, function (i, v) {
+                    ttitle += '<td>' + v.project_number + '</td>';
+                    tproject += '<td>' + v.project_name + '</td>';
+                    ryrgfyTD += '<td>' + v.ryrgfy + '</td>';
+                    zjtrfyTD += '<td>' + v.zjtrfy + '</td>';
+                    zjfyTD += '<td>' + v.zjfy + '</td>';
+                    wxzctxTD += '<td>' + v.wxzctxfy +'</td>';
+                    xcpsjfTD += '<td>' + v.xcpsjfy +'</td>';
+                    zbfyTD  += '<td>' + v.zbfy +'</td>';
+                    otherTD  += '<td>' + v.other +'</td>';
+                    wtyffyTD  += '<td>' + v.wtyffy*0.8 +'</td>';
+                    jnyffyTD  += '<td>' + v.jnyffy*0.8 +'</td>';
+                    totalATD  += '<td>' + v.totalA +'</td>';
+                    let yftr_total = parseFloat(v.totalA)+(parseFloat(v.wtyffy)*0.8);
+                    let jnyf_total = parseFloat(v.totalA)*0.8+parseFloat(v.jnyffy)*0.8;
+                    yftrhjTD  += '<td>' + yftr_total +'</td>';
+                    jnyfhjTD  += '<td>' + jnyf_total +'</td>';
+                    ryrgfytotal += parseFloat(v.ryrgfy);
+                    zjtrfytotal += parseFloat(v.zjtrfy);
+                    zjfytotal += parseFloat(v.zjfy);
+                    wxzctxtotal += parseFloat(v.wxzctxfy);
+                    xcpsjftotal += parseFloat(v.xcpsjfy);
+                    zbfytotal += parseFloat(v.zbfy);
+                    othertotal += parseFloat(v.other);
+                    wtyffytotal += parseFloat(v.wtyffy);
+                    jnyffytotal += parseFloat(v.jnyffy);
+                    yftrhjtotal += parseFloat(yftr_total);
+                    jnyfhjtotal += parseFloat(jnyf_total);
+                    totalAtotal += parseFloat(v.totalA);
+                });
+                //信息列
+                $("#total").before(ttitle);
+                $("#project_name").append(tproject);
+                $("#ryrgfytotal").before(ryrgfyTD);
+                $("#zjtrfytotal").before(zjtrfyTD);
+                $("#zjfytotal").before(zjfyTD);
+                $("#wxzctxtotal").before(wxzctxTD);
+                $("#xcpsjftotal").before(xcpsjfTD);
+                $("#zbfytotal").before(zbfyTD);
+                $("#othertotal").before(otherTD);
+                $("#wtyffytotal").before(wtyffyTD);
+                $("#jnyffytotal").before(jnyffyTD);
+                $("#yftrhjtotal").before(yftrhjTD);
+                $("#jnyfhjtotal").before(jnyfhjTD);
+                $("#totalAtotal").before(totalATD);
+                //合计列
+                $("#ryrgfytotal").html(ryrgfytotal.toFixed(2));
+                $("#zjtrfytotal").html(zjtrfytotal.toFixed(2));
+                $("#zjfytotal").html(zjfytotal.toFixed(2));
+                $("#wxzctxtotal").html(wxzctxtotal.toFixed(2));
+                $("#xcpsjftotal").html(xcpsjftotal.toFixed(2));
+                $("#zbfytotal").html(zbfytotal.toFixed(2));
+                $("#othertotal").html(othertotal.toFixed(2));
+                $("#wtyffytotal").html(wtyffytotal.toFixed(2));
+                $("#jnyffytotal").html(jnyffytotal.toFixed(2));
+                $("#yftrhjtotal").html(yftrhjtotal.toFixed(2));
+                $("#jnyfhjtotal").html(jnyfhjtotal.toFixed(2));
+                $("#totalAtotal").html(totalAtotal.toFixed(2));
+            }
+        });
+
+    }
+</script>

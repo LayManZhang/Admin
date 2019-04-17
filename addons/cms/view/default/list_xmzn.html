@@ -1,0 +1,701 @@
+{layout name="common/layout" /}
+
+<div class="container"  id="content-container"> 
+    <h1>
+        {cms:channel name="name" /}
+        <ol class="breadcrumb pull-right">
+            <!-- S 面包屑导航 -->
+            {cms:breadcrumb id="item"}
+            <li><a href="{$item.url}">{$item.name}</a></li>
+            {/cms:breadcrumb}
+            <!-- E 面包屑导航 -->
+        </ol>
+        <!--实现无限级下拉菜单,maxlevel来控制最大层级-->
+
+    </h1>
+    <div class="tabs-wrapper">
+        <!-- S 分类列表 -->
+        <div class="tabs-mark-group plm ptm">
+            <div class="title">{:__('All categories')}：</div>
+            <ul class="content list-unstyled list-inline" id="searchfile">
+                <li class="classify"></li>
+            </ul>
+
+        </div>
+        {cms:pagefilter id="filter" exclude=""}
+        <div class="tabs-group ismore" id="{$filter.name}_choice1" style="height:50px;display: block">
+            <div class="title">{$filter.title}:</div>
+            <div>
+                <ul class="content" style="width: 950px;">
+                    {volist name="$filter.content" id="item"}
+                    <li class="{$item.active?'active':''} radios" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey ="{$filter.name}" searchname="{$filter.title}" searchval="{$item.value}" id="{$filter.name}{$item.value}" onclick="checked('{$filter.name}{$item.value}')">{$item.title}</a>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+            <?php if(in_array($filter['name'],['Objects','Fields','Mode','Direction'])){ ?>
+                <div style="position:absolute;right: 10px;top: 15px;">
+                    <a class="nav-link js-btn-more" href="javascript:;" type="show" id="{$filter.name}_more" onclick="more('{$filter.name}_more');"><span style="border: 1px solid #ccc;padding: 3px 3px;">更多</span><i class="icon-angle-down"></i></a>
+                    <a class="nav-link sl-e-multiple js-btn-multiple" href="javascript:;" type="checkbox" id="{$filter.name}_choice" onclick="choice_more('{$filter.name}_choice');" style="border: 1px solid #ccc;padding: 3px 3px;"><i class="sl-e-multiple-plus">+</i>多选</a>
+                </div>
+            <?php } ?>
+        </div>
+
+
+        <!-- 多选 -->
+        <div class="tabs-group ckmore" id="{$filter.name}_choice2" style="display: none;">
+            <form action="" id="{$filter.name}_form">
+                <div class="title">{$filter.title}:</div>
+                <div>
+                    <ul class="content ckbox" style="width: 950px;" id="{$filter.name}_ul">
+                    {volist name="$filter.content" id="item"}
+                        <?php if(!empty($item['value'])){ ?>
+                       <li><input onclick="ischange('{$filter.name}{$item.value}');" type="checkbox" value="{$item.value}" name="{$filter.name}" class="{$filter.name}{$item.value}"><span>{$item.title}</span></li>
+                        <?php } ?>
+                    {/volist}
+                    </ul>
+                </div>
+                <div style="text-align: center;padding-top: 15px;padding-bottom: 5px;height:50px;position: absolute;    bottom: 0px;left: 45%;">
+                    <a class="submit" name="{$filter.name}_choice" sername="{$filter.title}" serkey="{$filter.name}" href="javascript:;" style="border: 0;padding: 5px 15px 6px;color: #FFF;background-color: #E74649;margin:0 auto">确定</a>
+                    <a class="cancel" name="{$filter.name}_choice" href="javascript:;" style="border: 0;padding: 5px 15px 6px;color: #CCC;background-color: #f7f7f7;">取消</a>
+                    <?php if($filter['name']=='Mode'){ ?>
+                    <input type="checkbox" class="jqcz">是否精确查找
+                    <?php } ?>
+                    <span class="all_cancel" name="{$filter.name}">取消选中</span>
+                </div>
+
+            </form>
+        </div>
+
+        {/cms:pagefilter}
+
+        <div class="tabs-group ismore" id="xmjb_choice" style="height:50px;display: block">
+            <div class="title">项目级别:</div>
+            <div>
+                <ul class="content" style="width: 950px;">
+                    <li class="active" style="display: block;">
+                        <a class="nav-link " href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="" id="xmjb" onclick="checked('xmjb')" >全部</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="1" id="xmjb1" onclick="checked('xmjb1')" >国家</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="2" id="xmjb2" onclick="checked('xmjb2')" >广东省</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="3" id="xmjb3" onclick="checked('xmjb3')" >深圳市</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="5" id="xmjb5" onclick="checked('xmjb5')" >福田区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="6" id="xmjb6" onclick="checked('xmjb6')" >南山区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="7" id="xmjb7" onclick="checked('xmjb7')" >罗湖区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="8" id="xmjb8" onclick="checked('xmjb8')" >盐田区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="9" id="xmjb9" onclick="checked('xmjb9')" >宝安区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="10" id="xmjb10" onclick="checked('xmjb10')" >龙岗区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="11" id="xmjb11" onclick="checked('xmjb11')">龙华区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="12" id="xmjb12" onclick="checked('xmjb12')">坪山区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="13" id="xmjb13" onclick="checked('xmjb13')">光明区</a>
+                    </li>
+                    <li class="" style="display: block;">
+                        <a class="nav-link" href="#" type="radios" searchkey="xmjb" searchname="项目级别" searchval="14" id="xmjb14" onclick="checked('xmjb14')">大鹏新区</a>
+                    </li>
+                </ul>
+            </div>
+            <div style="position:absolute;right: 10px;top: 15px;">
+                <a class="nav-link js-btn-more" href="javascript:;" type="show" id="xmjb_more1" onclick="more('xmjb_more1');"><span style="border: 1px solid #ccc;padding: 3px 3px;">更多</span><i class="icon-angle-down"></i></a>
+            </div>
+        </div>
+
+        <!-- 项目级别第三级 -->
+        <div class="tabs-group" id="slbm_choice" style="height:50px;display: none">
+            <div class="title">主管部门:</div>
+            <div>
+                <ul class="content slbm-ul" style="width: 950px;">
+                </ul>
+            </div>
+            <div style="position:absolute;right: 10px;top: 15px;">
+                <a class="nav-link js-btn-more" href="javascript:;" type="show" id="xmjb_more3" onclick="more('xmjb_more3');"><span style="border: 1px solid #ccc;padding: 3px 3px;">更多</span><i class="icon-angle-down"></i></a>
+            </div>
+        </div>
+        <!-- E 分类列表 -->
+    </div>
+
+    <div class="article-filter">
+        <ul class="nav nav-sort clearfix">
+            <!-- S 排序 -->
+            {cms:pageorder id="order"}
+            <li><a href="javascript:;" order="{$order.name}" orderby="{$order.orderby}" class="{$order.active?'active':''} order">{$order.title}</a></li>
+            {/cms:pageorder}
+            <!-- E 排序 -->
+        </ul>
+    </div>
+
+    <div class="article-list-body row">
+
+        <div class="col-md-8 article-list-main" id="artcle-main">
+
+            <!-- S 列表 -->
+            {cms:pagelist id="item"}
+            {include file="common/item"}
+            {/cms:pagelist}
+            <!-- E 列表 -->
+
+            <!-- S 分页栏 -->
+            <div class="text-center">
+                {cms:pageinfo type="full" /} 
+            </div>
+            <!-- E 分页栏 -->
+        </div>
+
+        <aside class="col-md-4 article-sidebar">
+            <div class="panel panel-adimg">
+                {cms:block name="sidebarad1" /}
+            </div>
+            <div class="panel panel-adimg">
+                {cms:block name="sidebarad2" /}
+            </div>
+            {include file="common/sidebar" /}
+        </aside>
+    </div>
+</div>
+<script>
+    //初始值
+    var filters = []; //筛选初始值
+    var aj_url = '?id=49&diyname=guide'; //URL初始值
+    var order = '&orderby=default&orderway=desc';  //排序初始值
+    var page = '&page=1';  //分页初始值
+    var ckd = ''; //复选框值初始值
+
+    //页面初始化
+    $(function () {
+        var divArr = $('.ckmore');
+        $.each(divArr,function(i,n){
+            var h = $(this).css('height');
+            h = parseFloat(h);
+            var new_h = h+35 + 'px';
+            $(this).css('height',new_h);
+        });
+        var divArrs = $('.ismore');
+        $('.ismore').css('height','auto');
+        $.each(divArrs,function(i,n){
+            var h = $(this).css('height');
+            h = parseFloat(h);
+            if(h<=60){
+                $(this).children('div').children('.js-btn-more').css('display','none');
+            }
+        });
+        $('.ismore').css('height','50px');
+        // $("#artcle-main").children('section').remove();
+        // $(".text-center").remove();
+        //
+        // let url = aj_url+order;
+        // $.ajax({
+        //     type : "get",
+        //     url  : url,
+        //     data : {},
+        //     traditional: true,
+        //     success : function(data){
+        //         fetch(data);
+        //     }
+        //
+        // })
+    });
+    function ldfz() {
+        var ssxm = $("#c-ssxm").val();
+        $.ajax({
+
+            type : "get",
+
+            url  : '/admin/cms/archives/get_xmzninfo',
+
+            data : {"id" : ssxm},
+
+            success : function(data){
+                $("#hdata").empty();
+                var val=JSON.parse(data);
+                $.each(val,function(index,obj) {
+                    var key = 'row['+obj.keyname+']';
+                    var value = obj.keyvalue;
+                    var html = "<input type='hidden' name='"+key+"' value='"+value+"'>";
+                    $("#hdata").append(html);
+
+                });
+
+
+            }
+
+        })
+    }
+    $("#xmjb_choice div ul li a").on('click',function () {
+        $(this).parent().parent().children().removeClass('active');
+        $(this).parent().addClass('active');
+        var id = $(this).attr('searchval');
+        if(id==''){
+            $("#slbm_choice").css('display','none');
+            return false;
+        }
+        $.ajax({
+            type : "get",
+            url  : '/cms/x',
+            data : {id:id},
+            traditional: true,
+            success : function(data){
+                var html = '';
+                $(".slbm-ul").empty();
+                $.each(data,function (i,o) {
+                    html += '<li class="" style="display: block;">' +
+                        '                        <a class="nav-link" href="#" type="radios" searchkey="zgbm" searchname="主管部门" searchval="'+o.id+'" id="xmjb'+o.id+'" onclick="checked('+'`xmjb'+o.id+'`)">'+o.name+'</a>' +
+                        '                    </li>'
+                })
+                $(".slbm-ul").append(html);
+                $("#slbm_choice").css('height','auto');
+                var h = $("#slbm_choice").css('height');
+                h = parseFloat(h);
+                if(h<=60){
+                    $("#slbm_choice").children('div').children('.js-btn-more').css('display','none');
+                }else{
+                    $("#slbm_choice").children('div').children('.js-btn-more').css('display','block');
+                    $("#slbm_choice").children('div').children('.js-btn-more').children('span').text('更多');
+                    $("#slbm_choice").children('div').children('.js-btn-more').attr('type','show');
+                }
+                $("#slbm_choice").css('height','50px');
+                $("#slbm_choice").css('display','block');
+            }
+
+        });
+    });
+
+
+    //查看更多和收起
+    function more(id) {
+        if($("#"+id).attr('type')=='show'){
+            $("#"+id).children('span').text('收起');
+            $("#"+id).attr('type','hidden');
+            $("#"+id).parent().parent('div').css("height", "auto");
+        }else{
+            $("#"+id).children('span').text('更多');
+            $("#"+id).attr('type','show');
+            $("#"+id).parent().parent('div').css("height", "50px");
+        }
+
+    };
+
+    //多选
+    function choice_more(id) {
+        $("#"+id+"1").css('display','none');
+        $("#"+id+"2").css('display','block');
+    };
+
+
+    var ckdarr = [];
+    //checked复选框点击选中
+    function ischange(id) {
+        var ckd_text = $('.'+id).next().text();
+        var ckd_name = $('.'+id).attr('name');
+        if($('.'+id).prop('checked')==false){
+            $.each(ckdarr,function (index,obj) {
+                if(obj[ckd_name]) {
+                    if (obj[ckd_name] == ckd_text) {
+                        ckdarr.splice(index, 1);
+                    }
+                }
+            });
+        }else{
+            ckdarr.push({[ckd_name]:ckd_text});
+        }
+    }
+    //checked复选框点击文字选中
+    $('.ckbox li span').on('click',function () {
+        var ckd_text = $(this).text();
+        var ckd_name = $(this).prev().attr('name');
+        if($(this).prev().prop('checked')==true){
+            $.each(ckdarr,function (index,obj) {
+               if(obj[ckd_name]) {
+                   if (obj[ckd_name] == ckd_text) {
+                       ckdarr.splice(index, 1);
+                   }
+               }
+            });
+            $(this).prev().prop('checked',false);
+        }else{
+            ckdarr.push({[ckd_name]:ckd_text});
+            $(this).prev().prop('checked',true);
+        }
+
+    });
+
+    //实现反选
+    $(".all_cancel").on('click', function() {
+        $(this).parent().prev().children().children().children().prop("checked", false);
+        let ckd_name = $(this).attr('name');
+        for(var i in ckdarr){
+            if (ckdarr[i][ckd_name]) {
+                ckdarr[i][ckd_name] = '';
+            }
+        }
+    });
+
+    //submit
+    $(".submit").on("click",function(){
+        var sername = $(this).attr('serkey');
+        var searchname = $(this).attr('sername');
+        var formid = "#"+sername+'_form';
+        var formdata = $(formid).serialize();
+        let ckfile = [];
+        $.each(ckdarr,function (index,val) {
+            if(val[sername]!==''){
+                ckfile.push(val[sername]);
+            }
+        });
+        ckfile = ckfile.filter(s => $.trim(s).length > 0);
+        let ckdtext = ckfile.join(',');
+        if(formdata==''&&formdata==null){
+            $("#"+sername+"_choice1").css('display','block');
+            $("#"+sername+"_choice2").css('display','none');
+
+            $("#S"+sername).remove();
+
+            $.ajax({
+                type : "get",
+                url  : aj_url,
+                data : {},
+                traditional: true,
+                success : function(data){
+                    fetch(data);
+                }
+
+            });
+        }
+
+        $("#artcle-main").children('section').remove();
+        $(".text-center").remove();
+
+        $("#"+sername+"_choice1").css('display','block');
+        $("#"+sername+"_choice2").css('display','none');
+
+
+        //处理查询值转换为字符串
+        formdata = formdata.split('&');
+        formdata = formdata.join('');
+        formdata = formdata.split(sername+'=');
+        formdata = formdata.filter(s => $.trim(s).length > 0);
+        formdata = formdata.join(',');
+
+        var filte =  '&filter['+sername+']='+formdata;
+        let l_url = aj_url.split('&');
+
+        $.each(l_url,function (index,obj) {
+            var nd = obj.split('=');
+            let sernames = 'filter['+sername+']';
+            if (nd[0]==sernames) {
+                l_url[index] = '';
+            }
+        });
+
+        l_url = l_url.filter(s => $.trim(s).length > 0);
+        l_url = l_url.join('&');
+        l_url += filte;
+        let url = l_url;
+        // let url = aj_url+filte;
+        if(ckdtext!==''){
+            //'<span class="del_S" name="'+sername+'">'+'&nbsp;&nbsp;X'+
+            var html = '<li class="classify warning" id="'+'S'+sername+'">'+searchname+':'+'<span style="color: darkred">'+ckdtext+'</span>'+'</span></li>';
+            if ($("#" + 'S'+ sername).length > 0) {
+                $("#" + 'S'+ sername).html(searchname + ':' + '<span style="color: darkred">' + ckdtext + '</span>');
+            } else {
+                $("#searchfile").append(html);
+            }
+        }else{
+            $("#"+ 'S'+sername).remove();
+        }
+
+        if(formdata.length>3){
+           // alert('不能超过三个');
+        }
+        var jqcz = '';
+        if($('.jqcz').prop('checked')==true){
+
+             jqcz =  'Mode';
+        }
+        $.ajax({
+            type : "get",
+            url  : url,
+            data : {czms:true,jqcz:jqcz },
+            traditional: true,
+            success : function(data){
+                fetch(data);
+            }
+
+        });
+        aj_url = url;
+    });
+
+    //cancel
+    $('.cancel').on("click",function(){
+        var name = $(this).attr('name');
+        $("#"+name+"1").css('display','block');
+        $("#"+name+"2").css('display','none');
+    });
+
+
+
+
+    $(".del_S").on("click",function () {
+        var name = $(this).attr('name');
+        name = '#S'+name;
+        $(name).remove();
+    });
+
+    //点选筛选条件-单选
+    function checked(na) {
+        $("#artcle-main").children('section').remove();
+        $(".text-center").remove();
+        var nn = "#"+na;
+        var nns =  $(nn);
+        var searchname = nns.attr('searchname');
+        var searchkey = nns.attr('searchkey');
+        var searchval = nns.attr('searchval');
+        var searchtext = nns.html();
+        var ul = nns.parent('li').parent('ul');
+        ul.children('li').attr('class','');
+        nns.parent('li').attr('class','active');
+        //'<span class="del_S" name="'+searchkey+'">'+'&nbsp;&nbsp;X'+'</span>'+
+        var html = '<li class="classify warning" id="'+'S'+searchkey+'">'+searchname+':'+'<span style="color: darkred">'+searchtext+'</span></li>';
+
+
+        if(searchval) {
+            if ($("#" + 'S'+ searchkey).length > 0) {
+                $("#" + 'S'+ searchkey).html(searchname + ':' + '<span style="color: darkred">' + searchtext + '</span>');
+            } else {
+                $("#searchfile").append(html);
+            }
+        } else {
+            $("#"+ 'S'+searchkey).remove();
+
+            var nurl = aj_url.split('&');
+            $.each(nurl,function (index,obj) {
+                var nd = obj.split('=');
+                let sernames = 'filter['+searchkey+']';
+                if (nd[0]==sernames) {
+                    nurl[index] = '';
+                }
+            })
+            nurl = nurl.filter(s => $.trim(s).length > 0);
+            nurl = nurl.join('&');
+            $.ajax({
+                type : "get",
+                url  : nurl,
+                data : {},
+                success : function(data){
+                    fetch(data);
+                }
+
+            });
+            aj_url = nurl;
+            return false;
+        }
+
+        let l_url = aj_url.split('&');
+        if(searchkey=='zgbm') {
+            searchkey='xmjb';
+        }
+        $.each(l_url,function (index,obj) {
+            var nd = obj.split('=');
+            let sernames = 'filter['+searchkey+']';
+            if (nd[0]==sernames) {
+                l_url[index] = '';
+            }
+        });
+
+        l_url = l_url.filter(s => $.trim(s).length > 0);
+        l_url = l_url.join('&');
+
+        // var ajax_url = '?id=49&diyname=guide';
+        // for (let i in filters){
+        //     if(i!=='undefined'&&filters[i]!=''){
+        //         ajax_url += '&'+'filter['+i+']='+filters[i];
+        //     }
+        // }
+        var ajax_url = l_url += '&'+'filter['+searchkey+']='+searchval;
+        $.ajax({
+            type : "get",
+            url  : ajax_url+order,
+            data : {},
+            success : function(data){
+                fetch(data);
+            }
+
+        })
+        aj_url = ajax_url;
+    }
+
+    //排序
+    $('.order').on("click",function(){
+        $("#artcle-main").children('section').remove();
+        $(".text-center").remove();
+        $(this).parent().parent().children('li').children().removeClass('active');
+        $(this).addClass('active');
+        var orderby = $(this).attr('order');
+        var orderway = $(this).attr('orderby');
+        if(orderway=='asc'){
+            $(this).attr('orderby','desc');
+        }else{
+            $(this).attr('orderby','asc');
+        }
+        let ord = '&orderby='+orderby+'&orderway='+orderway;
+        let url = aj_url+ord+page;
+        $.ajax({
+            type : "get",
+            url  : url,
+            data : {},
+            traditional: true,
+            success : function(data){
+                fetch(data);
+            }
+
+        });
+        order = ord;
+    });
+
+    //分页
+    function page_contrl(i) {
+        $("#artcle-main").children('section').remove();
+        $(".text-center").remove();
+       let url = aj_url+order+'&page='+i;
+        $.ajax({
+            type : "get",
+            url  : url,
+            data : {},
+            traditional: true,
+            success : function(data){
+                fetch(data);
+            }
+
+        });
+        page = '&page='+i;
+        $('html , body').animate({scrollTop: 0},'slow');
+    }
+
+    //页面渲染
+    function fetch(data) {
+        $.each(data['data'],function(index,obj) {
+            var pro_status = obj.pro_status==2 ? '（该项目已废止)' : '';
+            var html ='';
+            var time = new Date(obj.createtime*1000);
+            var day = time.getDate();
+            var month  = time.getMonth()+1;
+            html += '<section class="article-section">' +
+                '                <article class="article-item">' +
+                '                    <div class="article-metas clearfix">' +
+                '                        <div class="pull-left">' +
+                '                            <div class="date">' +
+                '                                <div class="day">'+day+'</div>' +
+                '                                <div class="month">'+month+'月</div>' +
+                '                            </div>' +
+                '                        </div>' +
+                '                        <div class="metas-body">' +
+                '                            <h3 class="title"><a href="'+obj.url+'">'+obj.title+pro_status+'</a></h3>' +
+                '                            <p><a href="/cms/c/guide.html">'+'项目指南'+'</a></p>' +
+                '                        </div>' +
+                '                    </div>' +
+                '                    <div class="media">';
+            html +='                                                <div class="media-left">' +
+                '                            <a href="'+obj.url+'">' +
+                '                                </a><a href="'+obj.url+'"><img src="'+obj.image+'" </a>                            ' +
+                '                        </div>';
+
+            html += '                                                <div class="media-body">' +obj.description+
+                '                                                    </div>' +
+                '                    </div>' +
+                '                    <div class="article-tag">' +
+                '                        <div class="pull-left">' +
+                '                            {:__(\'Tags\')}： <span itemprop="keywords">';
+            $.each(obj.tagslist,function(i,o) {
+                html += '<a href="'+o.url+'" rel="tag">'+o.name+', '+'</a>';
+            });
+
+
+
+            html += '                                    </span>' +
+                '                        </div>' +
+                '                        <div class="pull-right">' +
+                '                            <a href="'+obj.url+'" class="btn btn-success"><i class="fa fa-angle-right"></i> {:__(\'View more\')}</a>' +
+                '                        </div>' +
+                '                        <div class="clearfix"></div>' +
+                '                    </div>' +
+                '                </article>' +
+                '            </section>';
+            $("#artcle-main").prepend(html);
+
+        })
+
+
+        //分页
+        $(".text-center").remove();
+        var pages = Math.ceil(data['total']/10);
+        var current_page = data['current_page'];
+        var pre_page = current_page-1 < 1 ? 0 : current_page-1;
+        var next_page = current_page+1 > pages ? pages : current_page+1;
+        var page = '';
+        if(pages>1){
+
+            page += '<div class="text-center">' +
+                '                <ul class="pagination">' ;
+                if (current_page==1){
+                    page +='<li class="disabled">' +
+                        '                    <a href="javascript:;" onclick="page_contrl('+pre_page+')" >'+'«'+'</a>' +
+                        '                    </li> ';
+                }else{
+                    page +='<li>' +
+                        '                    <a href="javascript:;" onclick="page_contrl('+pre_page+')" >'+'«'+'</a>' +
+                        '                    </li> ';
+                }
+
+            for (let i=1;i<=pages;i++){
+                if(i==current_page){
+                    page += '<li class="atcive" >' +
+                        '<a href="javascript:;" onclick="page_contrl('+i+')" style="background-color:#2c3e50 !important;"><span style="background-color:#2c3e50;border-color:#2c3e50;color: #fff;cursor:default;z-index: 3">'+i+'</span></a>' +
+                        '</li> ';
+                }else{
+                    page += '<li>' +
+                        '<a href="javascript:;" onclick="page_contrl('+i+')" ><span>'+i+'</span></a>' +
+                        '</li> ';
+                }
+
+            }
+
+            if (current_page==pages) {
+                page +=  '<li class="disabled">' +
+                    '               <a href="javascript:;" onclick="page_contrl('+next_page+')" >'+'»'+'</a>' +
+                    '                         </li></ul> ' +
+                    '            </div>';
+            }else{
+                page +=  '<li>' +
+                    '               <a href="javascript:;" onclick="page_contrl('+next_page+')" >'+'»'+'</a>' +
+                    '                         </li></ul> ' +
+                    '            </div>';
+            }
+
+        }else{
+            page += '';
+        }
+        $("#artcle-main").append(page);
+    }
+</script>

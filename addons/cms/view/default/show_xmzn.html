@@ -1,0 +1,91 @@
+{layout name="common/layout_xmzn" /}
+
+<div class="container" id="content-container">
+
+    <div class="article-list-body row">
+
+        <div class="col-md-8 article-detail-main">
+            <section class="article-section article-content">
+                <ol class="breadcrumb">
+                    <!-- S 面包屑导航 -->
+                    {cms:breadcrumb id="item"}
+                    <li><a href="{$item.url}">{$item.name}</a></li>
+                    {/cms:breadcrumb}
+                    <!-- E 面包屑导航 -->
+                </ol>
+                <div class="article-metas">
+                    <!-- S 标题区域 -->
+                    <div class="metas-body">
+                        <h2 class="title">{cms:archives name="title" /}</h2>
+                        <div class="sns">
+                            <span>
+                                发布时间：{cms:archives name="createtime|datetime" /}
+                            </span>
+                            <span class="views-num">
+                                <i class="fa fa-eye"></i>{cms:archives name="views" /}
+                            </span>
+                        </div>
+                      <p>{cms:archives name="Introduction" /}</p>
+                      <div class="option"><em>资助对象：</em> {cms:archives name="Objects_text" /}</div>
+                      <div class="option"><em>申报时间：</em><span class="c2">{cms:archives name="Starttime|date" /}—{cms:archives name="Endtime|datetime" /}</span></div>
+                    </div>
+                    <!-- E 标题区域 -->
+                </div>
+                <div class="article-text">
+                    <!-- S 正文 -->
+<div class="high2Left fl">
+	<div class="highIntro bg_white">
+		<ul class="highIntroType clearfix" id="Content_list">
+			<li class="action"><a href="javascript:;">项目介绍</a></li>
+			<li><a href="javascript:;">历年申报通知</a></li>
+			<li><a href="javascript:;">历年资助企业统计</a></li>
+			<li><a href="javascript:;">政策依据</a></li>
+		</ul>
+		<ul class="IntroCon" style="display: block">
+			<li>
+                               <p class="ttitle"><strong>　　一、审批内容</strong></p><p>　　{cms:archives name="Contents" /}</p>
+                               <p class="ttitle"><strong>　　二、支持力度与方式</strong></p><p>　　{cms:archives name="Support" /}</p>
+                               <p class="ttitle"><strong>　　三、申报要求</strong></p><p>　　{cms:archives name="Condition" /}</p>
+                               <p class="ttitle"><strong>　　四、申请材料</strong></p><p>　　{cms:archives name="Materials" /}</p>
+                               <p class="ttitle"><strong>　　五、受理时间</strong></p><p>　　{cms:archives name="Reception_time" /}</p>
+                               <p class="ttitle"><strong>　　六、审批程序</strong></p><p>　　{cms:archives name="Procedure" /}</p>
+                               <p class="ttitle"><strong>　　七、其他说明</strong></p><p>　　{cms:archives name="Explanation" /}</p>
+			</li>
+		</ul>
+		<ul class="IntroCon" style="display: none">
+			<div class="main">
+				<ul class="link-list s2">
+					<li><a href="" title=""><span class="fr">2018.12.31</span><i class="fa fa-file-text-o"></i>***项目申报通知</a></li>
+				</ul>
+			</div>
+		</ul>
+		<ul class="IntroCon" style="display: none;padding-bottom: 1px;">
+			<ul class="list4">
+				<li>***项目公示</li>
+			</ul>
+		</ul>
+		<ul class="IntroCon" style="display: none">
+			<li>{cms:archives name="Policy_basis" /}</li>
+		</ul>
+	</div>
+</div>                               
+                    <!-- E 正文 -->
+                </div>
+            </section>
+
+        </div>
+
+        <aside class="col-md-4 article-sidebar">
+            <div class="panel panel-adimg">
+              <div class="high1Right">
+                <div class="highPing clearfix project_apply" id="21"></div>
+                <p class="line30">资助金额：<em> 最高100.00万元</em></p>
+                <p class="line30">资助方式：<em> 资金+事前资助+无偿资助</em></p>
+                <p class="line20">组织部门： 深圳市科技创新委员会</p>
+              </div>
+            </div>
+            {include file="common/sidebar" /}
+        </aside>
+    </div>
+</div>
+<script type="text/javascript" src="http://www.zhongkechuang.cn/zkc/j/do.js"></script>

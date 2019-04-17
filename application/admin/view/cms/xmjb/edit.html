@@ -1,0 +1,52 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Parent_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-parent_id" data-rule="required" data-source="cms/xmjb/get_sjxm" class="form-control selectpage" name="row[parent_id]" type="text" value="{$row.parent_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grade_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grade_name" data-rule="required" class="form-control" name="row[grade_name]" type="text" value="{$row.grade_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grade_tname')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grade_tname" data-rule="required" class="form-control" name="row[grade_tname]" type="text" value="{$row.grade_tname}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grade_fname')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grade_fname" data-rule="required" class="form-control" name="row[grade_fname]" type="text" value="{$row.grade_fname}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grade_type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-grade_type" data-rule="required" class="form-control selectpicker" name="row[grade_type]">
+                {foreach name="gradeTypeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.grade_type"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Myorder')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-myorder" data-rule="required" class="form-control" name="row[myorder]" type="number" value="{$row.myorder}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
