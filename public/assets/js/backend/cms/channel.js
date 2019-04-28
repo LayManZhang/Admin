@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'editable'], function ($, undefined, Backend, Table, Form) {
 
     var Controller = {
         index: function () {
@@ -35,7 +35,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Table.api.formatter.flag
                         },
                         {field: 'model_name', title: __('Model_name'), operate: false},
-                        {field: 'name', title: __('Name'), align: 'left'},
+                        {field: 'name', title: __('Name'), align: 'left',editable:true},
                         {
                             field: 'url', title: __('Url'), formatter: function (value, row, index) {
                                 return '<a href="' + value + '" target="_blank" class="btn btn-default btn-xs"><i class="fa fa-link"></i></a>';

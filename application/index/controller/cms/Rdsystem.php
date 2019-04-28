@@ -9,14 +9,21 @@
 namespace app\index\controller\cms;
 
 use app\common\controller\Frontend;
-use page\Page;
+use Mpdf\Mpdf;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\TemplateProcessor;
 use think\Db;
 use addons\cms\model\Diyform as DiyformModel;
+use think\Exception;
 
 class Rdsystem extends Frontend
 {
     protected $layout = 'default';
-    protected $noNeedLogin = ['*'];
+    protected $noNeedLogin = [];
+    protected $noNeedRight = ['*'];
+
+
     public function _initialize()
     {
         parent::_initialize();
@@ -94,6 +101,8 @@ class Rdsystem extends Frontend
                     \think\Db::name($diyform['table'])->where('id',$id)->update($row);
                     if($diyname=='Research'){
                         Db::name('rddetail')->where('rid',$id)->update(['date'=>$row['Date'],'type'=>$row['Category']]);
+                    }else if($diyname=='Research_system'){
+                        Db::name('cms_userwords')->where('user_id',$this->auth->id)->update(['is_new'=>0,'update_time'=>time()]);
                     }
                 }
                 return json(['code'=>1,'msg'=>$type=='add' ? '添加成功' : '编辑成功']);
@@ -158,14 +167,15 @@ class Rdsystem extends Frontend
         foreach ($items as $key=>$val){
             $items[$key]['Category'] = $typeArr[$val['Category']]['name'];
         }
-        $this->assign('items',$items);
-        $this->assign('data',$data);
+        $this->view->assign('items',$items);
+        $this->view->assign('data',$data);
         $this->view->assign('title', '明细账');
-        return $this->fetch();
+        return $this->view->fetch();
     }
 
 
     public function project(){
+        $limit = $this->request->param('limit',10);
         $year = $this->request->param('year');
         if(!empty($year)&&$year!==null&&$year!==''){
             $where = "user_id = ".$this->auth->id ." AND ( DATE_FORMAT(QH34,'%Y') = ".$year .' or '. "DATE_FORMAT(QH35,'%Y') = ".$year.")";
@@ -176,7 +186,7 @@ class Rdsystem extends Frontend
 //            ->where('user_id',$this->auth->id)
             ->whereRaw($where)
             ->order('id', 'asc')
-            ->paginate(10);
+            ->paginate($limit);
         $items = $data->items();
         $this->assign('year',$year);
         $this->assign('items',$items);
@@ -306,22 +316,22 @@ class Rdsystem extends Frontend
             ->alias('a')
             ->join('rddetail b','b.pid = a.id','INNER')
             ->where('a.user_id',$this->auth->id)
-            ->whereRaw("DATE_FORMAT(b.Date,'%Y') = ".$year)
+            ->whereRaw("DATE_FORMAT(b.date,'%Y') = ".$year)
             ->field(['a.id','project_name','project_number'])
             ->group('b.pid')
             ->paginate(10);
         $project = $projects->items();
         foreach ($project as $key=>$val){
-            $totalA = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->field(Db::raw("SUM(amount) as total"))->find();
-            $ryrgfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','11,12,13')->field(Db::raw("SUM(amount) as total"))->group('pid')->find();
-            $zjtrfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','21,22,23,24,25,26,27,28')->field(Db::raw("SUM(amount) as total"))->find();
-            $zjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','31,32,33,34')->field(Db::raw("SUM(amount) as total"))->find();
-            $wxzctxfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','41,42,43')->field(Db::raw("SUM(amount) as total"))->find();
-            $xcpsjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','51,52')->field(Db::raw("SUM(amount) as total"))->find();
-            $zbfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','53,54,61,62')->field(Db::raw("SUM(amount) as total"))->find();
-            $other = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','71,72,73,74,75,76')->field(Db::raw("SUM(amount) as total"))->find();
-            $wtyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','81,82')->field(Db::raw("SUM(amount) as total"))->find();
-            $jnyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','81')->field(Db::raw("SUM(amount) as total"))->find();
+            $totalA = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->field(Db::raw("SUM(amount) as total"))->find();
+            $ryrgfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','11,12,13')->field(Db::raw("SUM(amount) as total"))->group('pid')->find();
+            $zjtrfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','21,22,23,24,25,26,27,28')->field(Db::raw("SUM(amount) as total"))->find();
+            $zjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','31,32,33,34')->field(Db::raw("SUM(amount) as total"))->find();
+            $wxzctxfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','41,42,43')->field(Db::raw("SUM(amount) as total"))->find();
+            $xcpsjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','51,52')->field(Db::raw("SUM(amount) as total"))->find();
+            $zbfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','53,54,61,62')->field(Db::raw("SUM(amount) as total"))->find();
+            $other = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','71,72,73,74,75,76')->field(Db::raw("SUM(amount) as total"))->find();
+            $wtyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','81,82')->field(Db::raw("SUM(amount) as total"))->find();
+            $jnyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','81')->field(Db::raw("SUM(amount) as total"))->find();
 
             $project[$key]['totalA'] = $totalA['total']==null ? '0' : $totalA['total'];
             $project[$key]['ryrgfy'] = $ryrgfy['total']==null ? '0' : $ryrgfy['total'];
@@ -343,6 +353,7 @@ class Rdsystem extends Frontend
     }
 
     public function reporting(){
+        $limit = $this->request->param('limit',10);
         $year = $this->request->param('year');
         if(!empty($year)&&$year!==null&&$year!==''){
             $where = "user_id = ".$this->auth->id ." AND ( DATE_FORMAT(QH34,'%Y') = ".$year .' or '. "DATE_FORMAT(QH35,'%Y') = ".$year.")";
@@ -353,7 +364,7 @@ class Rdsystem extends Frontend
 //            ->where('user_id',$this->auth->id)
             ->whereRaw($where)
             ->order('id', 'asc')
-            ->paginate(10);
+            ->paginate($limit);
         $items = $data->items();
         $this->assign('year',$year);
         $this->assign('items',$items);
@@ -368,39 +379,16 @@ class Rdsystem extends Frontend
         return $this->fetch();
     }
 
-    public function download(){
+    public function download_template(){
         $file = $this->request->param('file');
         $file_arr = [
-            'mxz'=>'/uploads/template/明细账导入模板.xls',
-            'fymx'=>'/uploads/template/研发费用明细账导入模板.xls',
-            'xm'=>'/uploads/template/研发项目导入模板.xls'
+            'mxz'=>['url'=>'/excel/mxz.xls','name'=>'明细账导入模板'],
+            'fymx'=>['url'=>'/excel/yffymxz.xls','name'=>'明细账导入费用明细'],
+            'xm'=>['url'=>'/excel/yfxm.xls','name'=>'研发项目导入模板']
         ];
-        $file_url = ROOT_PATH.'public'.$file_arr[$file];
-        if(file_exists($file_url))
-        {
-                  if(!isset($file_url)||trim($file_url)==''){
-                      echo '500';
-                  }
-                  if(!file_exists($file_url)){ //检查文件是否存在
-                      echo '404';
-                  }
-                  $new_name='';
-                  $file_name=basename($file_url);
-                  $file_type=explode('.',$file_url);
-                  $file_type=$file_type[count($file_type)-1];
-                  $file_name=trim($new_name=='')?$file_name:urlencode($new_name);
-                  $file_type=fopen($file_url,'r'); //打开文件
-                  //输入文件标签
-                  header("Content-type: application/octet-stream");
-                  header("Accept-Ranges: bytes");
-                  header("Accept-Length: ".filesize($file_url));
-                  header("Content-Disposition: attachment; filename=".$file_name);
-                  //输出文件内容
-                  echo fread($file_type,filesize($file_url));
-                  fclose($file_type);
-        }else{
-            echo '文件不存在';
-        }
+        $file_url = ROOT_PATH.'public'.$file_arr[$file]['url'];
+        $file_name = $file_arr[$file]['name'];
+       $this->download($file_url,$file_name);
     }
 
     /**
@@ -408,7 +396,7 @@ class Rdsystem extends Frontend
      */
     public function import()
     {
-        $file = $this->request->request('file');
+        $file = $this->request->file('file');
         $diyname = $this->request->post('diyname');
         ini_set("error_reporting","E_ALL & ~E_NOTICE");
         if (empty($file)) {
@@ -424,7 +412,7 @@ class Rdsystem extends Frontend
         if (!$file) {
             $this->error(__('Parameter %s can not be empty', 'file'));
         }
-        $filePath = ROOT_PATH . DS . 'public' . DS . $file;
+        $filePath = $file->getInfo('tmp_name');
         if (!is_file($filePath)) {
             $this->error(__('No results were found'));
         }
@@ -488,16 +476,22 @@ class Rdsystem extends Frontend
 
                 }
             }
-
-            if ($row) {
-                $row['user_id'] = $this->auth->id;
-                $insert[] = $row;
+            if($diyname=='Research'){
+                if ($row&&!empty($row['Date'])&&!empty($row['Document_number'])) {
+                    $row['user_id'] = $this->auth->id;
+                    $insert[] = $row;
+                }
+            }else if($diyname=='Project'){
+                if ($row&&!empty($row['project_number'])) {
+                    $row['user_id'] = $this->auth->id;
+                    $insert[] = $row;
+                }
             }
+
         }
         if (!$insert) {
             $this->error(__('No rows were updated'));
         }
-
         try {
             $this->model->saveAll($insert);
             $res = json(['code'=>1,'msg'=>'导入成功']);
@@ -509,15 +503,23 @@ class Rdsystem extends Frontend
         return $res;
     }
 
+    /**
+     * 导入费用明细
+     * @return \think\response\Json
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \think\db\exception\BindParamException
+     * @throws \think\exception\PDOException
+     */
     public function importAll()
     {
-        $file = $this->request->request('file','/uploads/20190412/78df1303b8a499fe16e85a818d951229.xls');
+        $file = $this->request->file('file');
         ini_set("error_reporting","E_ALL & ~E_NOTICE");
 
         if (!$file) {
             $this->error(__('Parameter %s can not be empty', 'file'));
         }
-        $filePath = ROOT_PATH . DS . 'public' . DS . $file;
+        $filePath = $file->getInfo('tmp_name');
         if (!is_file($filePath)) {
             $this->error(__('No results were found'));
         }
@@ -537,7 +539,7 @@ class Rdsystem extends Frontend
         $sheetCount = $PHPExcel->getSheetCount();
         $insertR = [];
         $insertP = [];
-            for ( $i = 0; $i < $sheetCount; $i++ ) {
+            for ( $i = 0; $i < 2; $i++ ) {
                 switch ($i){
                     case 0:
                         $this->model = new \app\admin\model\cms\Project();
@@ -733,524 +735,533 @@ class Rdsystem extends Frontend
 
         $obj  = new \PHPExcel();
 
-        $project = Db::name('project')->where(['user_id'=>$this->auth->id,'id'=>$id])->field(['id','project_number','project_name'])->find();
-        //横向单元格标识
+        $ids = explode(',',$id);
+        foreach ($ids as $key=>$v){
+            $project = Db::name('project')->where(['user_id'=>$this->auth->id,'id'=>$v])->field(['id','project_number','project_name'])->find();
+//            var_dump($project);exit;
+            //横向单元格标识
 
-        $cellName = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+            $cellName = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
 
-        $obj->getDefaultStyle()->getFont()->setName('宋体');
+            $obj->getDefaultStyle()->getFont()->setName('宋体');
 
-        $obj->getActiveSheet()->setTitle('sheet1');   //设置sheet名称
+            if($key !== 0) $obj->createSheet();
+            $obj->setactivesheetindex($key);
 
+            $obj->getActiveSheet($key)->setTitle($project['project_name']);   //设置sheet名称
 
-        $obj->getActiveSheet()->mergeCells('A1'.':'.'AI1');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A1', '自主研发“研发支出”辅助账');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('A2'.':'.'C2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A2', '项目名称:');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('A1'.':'.'AI1');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A1', '自主研发“研发支出”辅助账');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('D2'.':'.'G2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('D2', $project['project_name']);  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('A2'.':'.'C2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A2', '项目名称:');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('H2'.':'.'I2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('H2', '项目编号:');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('D2'.':'.'G2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('D2', $project['project_name']);  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('J2'.':'.'K2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('J2', $project['project_number']);  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('H2'.':'.'I2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('H2', '项目编号:');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('L2'.':'.'N2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('L2', '资本化、费用化支出选项:');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('J2'.':'.'K2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('J2', $project['project_number']);  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('O2'.':'.'P2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('O2', '费用化');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('L2'.':'.'N2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('L2', '资本化、费用化支出选项:');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('Q2'.':'.'S2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('Q2', '项目实施状态选项：');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('O2'.':'.'P2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('O2', '费用化');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('T2'.':'.'U2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('T2', '未完成');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('Q2'.':'.'S2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('Q2', '项目实施状态选项：');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('V2'.':'.'W2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('V2', '研发成果：');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('T2'.':'.'U2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('T2', '未完成');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('X2'.':'.'Z2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('X2', '');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('V2'.':'.'W2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('V2', '研发成果：');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('AA2'.':'.'AB2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AA2', '研发成果证书号：');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('X2'.':'.'Z2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('X2', '');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('AC2'.':'.'AE2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AC2', '');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('AA2'.':'.'AB2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AA2', '研发成果证书号：');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('AF2'.':'.'AI2');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AF2', '金额单位：元（列至角分）：');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('AC2'.':'.'AE2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AC2', '');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('A3'.':'.'B6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A3', '凭证日期');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('AF2'.':'.'AI2');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AF2', '金额单位：元（列至角分）：');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('C3'.':'.'D6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('C3', '凭证号');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('A3'.':'.'B6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A3', '凭证日期');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('E3'.':'.'E6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('E3', '摘要');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('C3'.':'.'D6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('C3', '凭证号');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('F3'.':'.'F6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('F3', '借方金额');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('E3'.':'.'E6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('E3', '摘要');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('G3'.':'.'G6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('G3', '贷方金额');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('F3'.':'.'F6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('F3', '借方金额');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('H3'.':'.'H6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('H3', '借或贷');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('G3'.':'.'G6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('G3', '贷方金额');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('I3'.':'.'I6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('I3', '余额');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('H3'.':'.'H6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('H3', '借或贷');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('J3'.':'.'AI3');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('J3', '费用明细（借方）');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('I3'.':'.'I6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('I3', '余额');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('J4'.':'.'L4');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('J4', '一、人员人工费用');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('J3'.':'.'AI3');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('J3', '费用明细（借方）');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('M4'.':'.'T4');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('M4', '二、直接投入费用');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('J4'.':'.'L4');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('J4', '一、人员人工费用');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('U4'.':'.'V4');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('U4', '三、折旧费用');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('M4'.':'.'T4');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('M4', '二、直接投入费用');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('W4'.':'.'Y4');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('W4', '四、无形资产摊销');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('U4'.':'.'V4');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('U4', '三、折旧费用');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('Z4'.':'.'AC4');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('Z4', '五、新产品设计费等');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('W4'.':'.'Y4');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('W4', '四、无形资产摊销');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('AD4'.':'.'AI4');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AD4', '六、其他相关费用');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('Z4'.':'.'AC4');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('Z4', '五、新产品设计费等');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('J5'.':'.'K5');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('J5', '直接从事研发活动人员');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('AD4'.':'.'AI4');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AD4', '六、其他相关费用');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('J6'.':'.'J6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('J6', '工资薪金');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('J5'.':'.'K5');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('J5', '直接从事研发活动人员');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('K6'.':'.'K6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('K6', '五险一金');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('J6'.':'.'J6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('J6', '工资薪金');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('L5'.':'.'L6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('L5', '外聘研发人员的劳务费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('M5'.':'.'O5');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('M5', '研发活动直接消耗');  //设置合并后的单元格内容
+            $obj->getActiveSheet($key)->mergeCells('K6'.':'.'K6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('K6', '五险一金');  //设置合并后的单元格内容
 
-        $obj->getActiveSheet()->mergeCells('M6'.':'.'M6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('M6', '材料');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('N6'.':'.'N6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('N6', '燃料');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('O6'.':'.'O6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('O6', '动力费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('P5'.':'.'P6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('P5', '用于中间试验和产品试制的模具、工艺装备开发及制造费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('Q5'.':'.'Q6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('Q5', '用于不构成固定资产的样品、样机及一般测试手段购置费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('R5'.':'.'R6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('R5', '用于试制产品的检验费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('S5'.':'.'S6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('S5', '用于研发活动的仪器、设备的运行维护、调整、检验、维修等费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('T5'.':'.'T6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('T5', '通过经营租赁方式租入的用于研发活动的仪器、设备租赁费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('U5'.':'.'U6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('U5', '用于研发活动的仪器的折旧费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('V5'.':'.'V6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('V5', '用于研发活动的设备的折旧费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('W5'.':'.'W6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('W5', '用于研发活动的软件的摊销费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('X5'.':'.'X6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('X5', '用于研发活动的专利权的摊销费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('Y5'.':'.'Y6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('Y5', '用于研发活动的非专利技术（包括许可证、专有技术、设计和计算方法等）的摊销费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('Z5'.':'.'Z6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('Z5', '新产品设计费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AA5'.':'.'AA6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AA5', '新工艺规程制定费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AB5'.':'.'AB6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AB5', '新药研制的临床试验费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AC5'.':'.'AC6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AC5', '勘探开发技术的现场试验费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AD5'.':'.'AD6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AD5', '技术图书资料费、资料翻译费、专家咨询费、高新科技研发保险费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AE5'.':'.'AE6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AE5', '研发成果的检索、分析、评议、论证、鉴定、评审、评估、验收费用');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AF5'.':'.'AF6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AF5', '知识产权的申请费、注册费、代理费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AG5'.':'.'AG6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AG5', '差旅费、会议费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AH5'.':'.'AH6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AH5', '职工福利费、补充养老保险费、补充医疗保险费');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('AI5'.':'.'AI6');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AI5', '');  //设置合并后的单元格内容
-
-        $obj->getActiveSheet()->mergeCells('A7'.':'.'I7');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A7', '序号');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('J7', '1.1');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('K7', '1.2');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('L7', '1.3');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('M7', '2.1');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('N7', '2.2');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('O7', '2.3');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('P7', '2.4');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Q7', '2.5');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('R7', '2.6');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('S7', '2.7');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('T7', '2.8');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('U7', '3.1');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('V7', '3.2');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('W7', '4.1');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('X7', '4.2');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Y7', '4.3');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Z7', '5.1');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AA7', '5.2');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AB7', '5.3');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AC7', '5.4');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AD7', '6.1');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AE7', '6.2');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AF7', '6.3');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AG7', '6.4');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AH7', '6.5');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AI7', '6.6');  //设置单元格内容
-
-        $obj->getActiveSheet()->mergeCells('A8'.':'.'H8');   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A8', '起初余额');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('I8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('J8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('K8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('L8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('M8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('N8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('O8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('P8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Q8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('R8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('S8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('T8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('U8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('V8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('W8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('X8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Y8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Z8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AA8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AB8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AC8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AD8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AE8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AF8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AG8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AH8', '0.00');  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AI8', '0.00');  //设置单元格内容
-
-
-        //样式
-        $obj->getActiveSheet()->getstyle('A1'.':'.'AI1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $obj->getActiveSheet()->getstyle('A1')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('A2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('A2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('A8')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $obj->getActiveSheet()->getstyle('H2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('H2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('L2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('L2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('Q2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('Q2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('V2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('V2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('AA2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('AA2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('AF2')->getFont()->setBold(true);
-        $obj->getActiveSheet()->getstyle('AF2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('A1')->getFont()->setSize(15);
-        $obj->getActiveSheet()->getstyle('A3'.':'.'AI7')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $obj->getActiveSheet()->getstyle('A3'.':'.'AI7')->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-        $obj->getActiveSheet()->getStyle('J5'.':'.'AI6')->getAlignment()->setWrapText(true);
-        //列宽
-        $obj->getActiveSheet()->getColumnDimension('E')->setWidth(30);
-        $obj->getActiveSheet()->getColumnDimension('J')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('K')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('L')->setWidth(7);
-        $obj->getActiveSheet()->getColumnDimension('M')->setWidth(7);
-        $obj->getActiveSheet()->getColumnDimension('N')->setWidth(7);
-        $obj->getActiveSheet()->getColumnDimension('O')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('P')->setWidth(15);
-        $obj->getActiveSheet()->getColumnDimension('Q')->setWidth(15);
-        $obj->getActiveSheet()->getColumnDimension('R')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('S')->setWidth(15);
-        $obj->getActiveSheet()->getColumnDimension('T')->setWidth(15);
-        $obj->getActiveSheet()->getColumnDimension('U')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('V')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('W')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('X')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('Y')->setWidth(20);
-        $obj->getActiveSheet()->getColumnDimension('Z')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AA')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AB')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AC')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AD')->setWidth(15);
-        $obj->getActiveSheet()->getColumnDimension('AE')->setWidth(15);
-        $obj->getActiveSheet()->getColumnDimension('AF')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AG')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AH')->setWidth(10);
-        $obj->getActiveSheet()->getColumnDimension('AI')->setWidth(10);
-        //行高
-        $obj->getActiveSheet()->getRowDimension('5')->setRowHeight(70);
-        $obj->getActiveSheet()->getRowDimension('6')->setRowHeight(30);
-
-
-        //填写数据
-        $data = Db::name('rddetail')
-            ->alias('a')
-            ->join('research_ledger b','a.rid = b.id','LEFT')
-            ->field(['b.*','a.amount as total','a.type','lend_state'])
-            ->where('a.pid',$id)
-            ->whereRaw("DATE_FORMAT(a.Date,'%Y') = ".$year)
-            ->order('b.Date,a.lend_state')
-            ->select();
-        $_row = 9;
-
-        $balance = 0;$balance11 = 0;$balance12 = 0;$balance13 = 0;$balance21 = 0;$balance22 = 0;$balance23 = 0;$balance24 = 0;$balance25 = 0;$balance26 = 0;$balance27 = 0;$balance28 = 0;$balance31 = 0;
-        $balance32 = 0;$balance41 = 0;$balance42 = 0;$balance43 = 0;$balance51 = 0;$balance52 = 0;$balance53 = 0;$balance54 = 0;$balance71 = 0;$balance72 = 0;
-        $balance73 = 0;$balance74 = 0;$balance75 = 0;
-        foreach ($data as $key=>$val){
-            $obj->getActiveSheet()->mergeCells('A'.$_row.':'.'B'.$_row);   //合并单元格
-            $obj->getActiveSheet()->setCellValue('A'.$_row, $val['Date']);  //设置单元格内容
-
-            $obj->getActiveSheet()->mergeCells('C'.$_row.':'.'D'.$_row);   //凭证日期
-            $obj->getActiveSheet()->setCellValue('C'.$_row, $val['Document_number']);  //凭证号
-
-            if($val['lend_state']==2){
-
-                $Credit_amount = abs($val['total']);
-                $Debit_amount = 0;
-            }else{
-                $Debit_amount = $val['total'];
-                $Credit_amount = 0;
+            $obj->getActiveSheet($key)->mergeCells('L5'.':'.'L6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('L5', '外聘研发人员的劳务费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('M5'.':'.'O5');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('M5', '研发活动直接消耗');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('M6'.':'.'M6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('M6', '材料');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('N6'.':'.'N6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('N6', '燃料');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('O6'.':'.'O6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('O6', '动力费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('P5'.':'.'P6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('P5', '用于中间试验和产品试制的模具、工艺装备开发及制造费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('Q5'.':'.'Q6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('Q5', '用于不构成固定资产的样品、样机及一般测试手段购置费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('R5'.':'.'R6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('R5', '用于试制产品的检验费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('S5'.':'.'S6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('S5', '用于研发活动的仪器、设备的运行维护、调整、检验、维修等费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('T5'.':'.'T6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('T5', '通过经营租赁方式租入的用于研发活动的仪器、设备租赁费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('U5'.':'.'U6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('U5', '用于研发活动的仪器的折旧费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('V5'.':'.'V6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('V5', '用于研发活动的设备的折旧费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('W5'.':'.'W6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('W5', '用于研发活动的软件的摊销费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('X5'.':'.'X6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('X5', '用于研发活动的专利权的摊销费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('Y5'.':'.'Y6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('Y5', '用于研发活动的非专利技术（包括许可证、专有技术、设计和计算方法等）的摊销费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('Z5'.':'.'Z6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('Z5', '新产品设计费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AA5'.':'.'AA6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AA5', '新工艺规程制定费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AB5'.':'.'AB6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AB5', '新药研制的临床试验费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AC5'.':'.'AC6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AC5', '勘探开发技术的现场试验费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AD5'.':'.'AD6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AD5', '技术图书资料费、资料翻译费、专家咨询费、高新科技研发保险费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AE5'.':'.'AE6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AE5', '研发成果的检索、分析、评议、论证、鉴定、评审、评估、验收费用');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AF5'.':'.'AF6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AF5', '知识产权的申请费、注册费、代理费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AG5'.':'.'AG6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AG5', '差旅费、会议费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AH5'.':'.'AH6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AH5', '职工福利费、补充养老保险费、补充医疗保险费');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('AI5'.':'.'AI6');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AI5', '');  //设置合并后的单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('A7'.':'.'I7');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A7', '序号');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('J7', '1.1');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('K7', '1.2');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('L7', '1.3');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('M7', '2.1');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('N7', '2.2');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('O7', '2.3');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('P7', '2.4');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Q7', '2.5');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('R7', '2.6');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('S7', '2.7');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('T7', '2.8');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('U7', '3.1');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('V7', '3.2');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('W7', '4.1');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('X7', '4.2');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Y7', '4.3');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Z7', '5.1');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AA7', '5.2');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AB7', '5.3');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AC7', '5.4');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AD7', '6.1');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AE7', '6.2');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AF7', '6.3');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AG7', '6.4');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AH7', '6.5');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AI7', '6.6');  //设置单元格内容
+
+            $obj->getActiveSheet($key)->mergeCells('A8'.':'.'H8');   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A8', '起初余额');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('I8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('J8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('K8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('L8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('M8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('N8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('O8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('P8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Q8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('R8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('S8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('T8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('U8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('V8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('W8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('X8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Y8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Z8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AA8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AB8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AC8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AD8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AE8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AF8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AG8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AH8', '0.00');  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AI8', '0.00');  //设置单元格内容
+
+
+            //样式
+            $obj->getActiveSheet($key)->getstyle('A1'.':'.'AI1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $obj->getActiveSheet($key)->getstyle('A1')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('A2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('A2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('A8')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $obj->getActiveSheet($key)->getstyle('H2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('H2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('L2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('L2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('Q2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('Q2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('V2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('V2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('AA2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('AA2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('AF2')->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->getstyle('AF2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('A1')->getFont()->setSize(15);
+            $obj->getActiveSheet($key)->getstyle('A3'.':'.'AI7')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $obj->getActiveSheet($key)->getstyle('A3'.':'.'AI7')->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+            $obj->getActiveSheet($key)->getStyle('J5'.':'.'AI6')->getAlignment()->setWrapText(true);
+            //列宽
+            $obj->getActiveSheet($key)->getColumnDimension('E')->setWidth(30);
+            $obj->getActiveSheet($key)->getColumnDimension('J')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('K')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('L')->setWidth(7);
+            $obj->getActiveSheet($key)->getColumnDimension('M')->setWidth(7);
+            $obj->getActiveSheet($key)->getColumnDimension('N')->setWidth(7);
+            $obj->getActiveSheet($key)->getColumnDimension('O')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('P')->setWidth(15);
+            $obj->getActiveSheet($key)->getColumnDimension('Q')->setWidth(15);
+            $obj->getActiveSheet($key)->getColumnDimension('R')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('S')->setWidth(15);
+            $obj->getActiveSheet($key)->getColumnDimension('T')->setWidth(15);
+            $obj->getActiveSheet($key)->getColumnDimension('U')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('V')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('W')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('X')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('Y')->setWidth(20);
+            $obj->getActiveSheet($key)->getColumnDimension('Z')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AA')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AB')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AC')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AD')->setWidth(15);
+            $obj->getActiveSheet($key)->getColumnDimension('AE')->setWidth(15);
+            $obj->getActiveSheet($key)->getColumnDimension('AF')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AG')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AH')->setWidth(10);
+            $obj->getActiveSheet($key)->getColumnDimension('AI')->setWidth(10);
+            //行高
+            $obj->getActiveSheet($key)->getRowDimension('5')->setRowHeight(70);
+            $obj->getActiveSheet($key)->getRowDimension('6')->setRowHeight(30);
+
+
+            //填写数据
+            $data = Db::name('rddetail')
+                ->alias('a')
+                ->join('research_ledger b','a.rid = b.id','LEFT')
+                ->field(['b.*','a.amount as total','a.type','lend_state'])
+                ->where('a.pid',$v)
+                ->whereRaw("DATE_FORMAT(a.Date,'%Y') = ".$year)
+                ->order('b.Date,a.lend_state')
+                ->select();
+            $_row = 9;
+
+            $balance = 0;$balance11 = 0;$balance12 = 0;$balance13 = 0;$balance21 = 0;$balance22 = 0;$balance23 = 0;$balance24 = 0;$balance25 = 0;$balance26 = 0;$balance27 = 0;$balance28 = 0;$balance31 = 0;
+            $balance32 = 0;$balance41 = 0;$balance42 = 0;$balance43 = 0;$balance51 = 0;$balance52 = 0;$balance53 = 0;$balance54 = 0;$balance71 = 0;$balance72 = 0;
+            $balance73 = 0;$balance74 = 0;$balance75 = 0;
+            foreach ($data as $k=>$val){
+                $obj->getActiveSheet($key)->mergeCells('A'.$_row.':'.'B'.$_row);   //合并单元格
+                $obj->getActiveSheet($key)->setCellValue('A'.$_row, $val['Date']);  //设置单元格内容
+
+                $obj->getActiveSheet($key)->mergeCells('C'.$_row.':'.'D'.$_row);   //凭证日期
+                $obj->getActiveSheet($key)->setCellValue('C'.$_row, $val['Document_number']);  //凭证号
+
+                if($val['lend_state']==2){
+
+                    $Credit_amount = abs($val['total']);
+                    $Debit_amount = 0;
+                }else{
+                    $Debit_amount = $val['total'];
+                    $Credit_amount = 0;
+                }
+                $balance += (float)$val['total'];
+                if($balance>0){
+                    $lend_state = '借';
+                }else if($balance<0){
+                    $lend_state = '贷';
+                }
+                //  $balance = sprintf("%.0f", $balance);
+                if((int)$balance==0){
+                    $lend_state = '平';
+                }
+
+
+
+                $obj->getActiveSheet($key)->setCellValue('E'.$_row, $val['Abstract']);  //摘要
+                $obj->getActiveSheet($key)->setCellValue('F'.$_row, $Debit_amount);  //借方金额
+                $obj->getActiveSheet($key)->setCellValue('G'.$_row, $Credit_amount);  //贷方金额
+                $obj->getActiveSheet($key)->setCellValue('H'.$_row, $lend_state);  //借或贷
+                $obj->getActiveSheet($key)->setCellValue('I'.$_row, $balance);  //余额
+
+                //金额类别
+                switch ($val['type']){
+                    case '11':
+                        $balance11 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('J'.$_row, $val['total']);
+                        break;
+                    case '12':
+                        $balance12 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('K'.$_row, $val['total']);
+                        break;
+                    case '13':
+                        $balance13 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('L'.$_row, $val['total']);
+                        break;
+                    case '21':
+                        $balance21 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('M'.$_row, $val['total']);
+                        break;
+                    case '22':
+                        $balance22 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('N'.$_row, $val['total']);
+                        break;
+                    case '23':
+                        $balance23 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('O'.$_row, $val['total']);
+                        break;
+                    case '24':
+                        $balance24 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('P'.$_row, $val['total']);
+                        break;
+                    case '25':
+                        $balance25 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('Q'.$_row, $val['total']);
+                        break;
+                    case '26':
+                        $balance26 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('R'.$_row, $val['total']);
+                        break;
+                    case '27':
+                        $balance27 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('S'.$_row, $val['total']);
+                        break;
+                    case '28':
+                        $balance28 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('T'.$_row, $val['total']);
+                        break;
+                    case '31':
+                        $balance31 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('U'.$_row, $val['total']);
+                        break;
+                    case '32':
+                        $balance32 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('V'.$_row, $val['total']);
+                        break;
+                    case '41':
+                        $balance41 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('W'.$_row, $val['total']);
+                        break;
+                    case '42':
+                        $balance42 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('X'.$_row, $val['total']);
+                        break;
+                    case '43':
+                        $balance43 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('Y'.$_row, $val['total']);
+                        break;
+                    case '51':
+                        $balance51 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('Z'.$_row, $val['total']);
+                        break;
+                    case '52':
+                        $balance52+= (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AA'.$_row, $val['total']);
+                        break;
+                    case '53':
+                        $balance53 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AB'.$_row, $val['total']);
+                        break;
+                    case '54':
+                        $balance54 += (float)$val['total'];
+                        $obj->getActiveSheet()->setCellValue('AC'.$_row, $val['total']);
+                        break;
+                    case '71':
+                        $balance71 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AD'.$_row, $val['total']);
+                        break;
+                    case '72':
+                        $balance72 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AE'.$_row, $val['total']);
+                        break;
+                    case '73':
+                        $balance73 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AF'.$_row, $val['total']);
+                        break;
+                    case '74':
+                        $balance74 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AG'.$_row, $val['total']);
+                        break;
+                    case '75':
+                        $balance75 += (float)$val['total'];
+                        $obj->getActiveSheet($key)->setCellValue('AH'.$_row, $val['total']);
+                        break;
+                }
+
+                $_row++;
             }
-            $balance += (float)$val['total'];
-            if($balance>0){
-                $lend_state = '借';
-            }else if($balance<0){
-                $lend_state = '贷';
-            }
-            $balance = sprintf("%.0f", $balance);
-            if((float)$balance==0){
-                $lend_state = '平';
-            }
-
-
-
-            $obj->getActiveSheet()->setCellValue('E'.$_row, $val['Abstract']);  //摘要
-            $obj->getActiveSheet()->setCellValue('F'.$_row, $Debit_amount);  //借方金额
-            $obj->getActiveSheet()->setCellValue('G'.$_row, $Credit_amount);  //贷方金额
-            $obj->getActiveSheet()->setCellValue('H'.$_row, $lend_state);  //借或贷
-            $obj->getActiveSheet()->setCellValue('I'.$_row, $balance);  //余额
-
-            //金额类别
-            switch ($val['type']){
-                case '11':
-                    $balance11 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('J'.$_row, $val['total']);
-                    break;
-                case '12':
-                    $balance12 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('K'.$_row, $val['total']);
-                    break;
-                case '13':
-                    $balance13 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('L'.$_row, $val['total']);
-                    break;
-                case '21':
-                    $balance21 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('M'.$_row, $val['total']);
-                    break;
-                case '22':
-                    $balance22 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('N'.$_row, $val['total']);
-                    break;
-                case '23':
-                    $balance23 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('O'.$_row, $val['total']);
-                    break;
-                case '24':
-                    $balance24 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('P'.$_row, $val['total']);
-                    break;
-                case '25':
-                    $balance25 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('Q'.$_row, $val['total']);
-                    break;
-                case '26':
-                    $balance26 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('R'.$_row, $val['total']);
-                    break;
-                case '27':
-                    $balance27 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('S'.$_row, $val['total']);
-                    break;
-                case '28':
-                    $balance28 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('T'.$_row, $val['total']);
-                    break;
-                case '31':
-                    $balance31 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('U'.$_row, $val['total']);
-                    break;
-                case '32':
-                    $balance32 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('V'.$_row, $val['total']);
-                    break;
-                case '41':
-                    $balance41 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('W'.$_row, $val['total']);
-                    break;
-                case '42':
-                    $balance42 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('X'.$_row, $val['total']);
-                    break;
-                case '43':
-                    $balance43 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('Y'.$_row, $val['total']);
-                    break;
-                case '51':
-                    $balance51 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('Z'.$_row, $val['total']);
-                    break;
-                case '52':
-                    $balance52+= (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AA'.$_row, $val['total']);
-                    break;
-                case '53':
-                    $balance53 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AB'.$_row, $val['total']);
-                    break;
-                case '54':
-                    $balance54 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AC'.$_row, $val['total']);
-                    break;
-                case '71':
-                    $balance71 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AD'.$_row, $val['total']);
-                    break;
-                case '72':
-                    $balance72 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AE'.$_row, $val['total']);
-                    break;
-                case '73':
-                    $balance73 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AF'.$_row, $val['total']);
-                    break;
-                case '74':
-                    $balance74 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AG'.$_row, $val['total']);
-                    break;
-                case '75':
-                    $balance75 += (float)$val['total'];
-                    $obj->getActiveSheet()->setCellValue('AH'.$_row, $val['total']);
-                    break;
-            }
-
+            $obj->getActiveSheet($key)->mergeCells('A'.$_row.':'.'H'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A'.$_row, '期末余额');  //设置单元格内容
+            $obj->getActiveSheet($key)->getstyle('A'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $obj->getActiveSheet($key)->setCellValue('I'.$_row, $balance);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('J'.$_row, $balance11);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('K'.$_row, $balance12);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('L'.$_row, $balance13);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('M'.$_row, $balance21);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('N'.$_row, $balance22);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('O'.$_row, $balance23);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('P'.$_row, $balance24);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Q'.$_row, $balance25);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('R'.$_row, $balance26);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('S'.$_row, $balance27);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('T'.$_row, $balance28);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('U'.$_row, $balance31);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('V'.$_row, $balance32);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('W'.$_row, $balance41);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('X'.$_row, $balance42);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Y'.$_row, $balance43);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('Z'.$_row, $balance51);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AA'.$_row,$balance52);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AB'.$_row,$balance53);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AC'.$_row,$balance54);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AD'.$_row,$balance71);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AE'.$_row,$balance72);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AF'.$_row,$balance73);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AG'.$_row,$balance74);  //设置单元格内容
+            $obj->getActiveSheet($key)->setCellValue('AH'.$_row,$balance75);  //设置单元格内容
             $_row++;
-        }
-        $obj->getActiveSheet()->mergeCells('A'.$_row.':'.'H'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A'.$_row, '期末余额');  //设置单元格内容
-        $obj->getActiveSheet()->getstyle('A'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $obj->getActiveSheet()->setCellValue('I'.$_row, $balance);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('J'.$_row, $balance11);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('K'.$_row, $balance12);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('L'.$_row, $balance13);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('M'.$_row, $balance21);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('N'.$_row, $balance22);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('O'.$_row, $balance23);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('P'.$_row, $balance24);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Q'.$_row, $balance25);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('R'.$_row, $balance26);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('S'.$_row, $balance27);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('T'.$_row, $balance28);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('U'.$_row, $balance31);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('V'.$_row, $balance32);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('W'.$_row, $balance41);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('X'.$_row, $balance42);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Y'.$_row, $balance43);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('Z'.$_row, $balance51);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AA'.$_row,$balance52);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AB'.$_row,$balance53);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AC'.$_row,$balance54);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AD'.$_row,$balance71);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AE'.$_row,$balance72);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AF'.$_row,$balance73);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AG'.$_row,$balance74);  //设置单元格内容
-        $obj->getActiveSheet()->setCellValue('AH'.$_row,$balance75);  //设置单元格内容
-        $_row++;
-        $obj->getActiveSheet()->mergeCells('A'.$_row.':'.'D'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('A'.$_row, '主办会计：');  //设置单元格内容
-        $obj->getActiveSheet()->getstyle('A'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('A'.$_row)->getFont()->setBold(true);
-        $obj->getActiveSheet()->mergeCells('E'.$_row.':'.'K'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('E'.$_row, '');  //设置单元格内容
-        $obj->getActiveSheet()->mergeCells('L'.$_row.':'.'M'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('L'.$_row, '录入人员：');  //设置单元格内容
-        $obj->getActiveSheet()->getstyle('L'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('L'.$_row)->getFont()->setBold(true);
-        $obj->getActiveSheet()->mergeCells('N'.$_row.':'.'X'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('X'.$_row, '');  //设置单元格内容
-        $obj->getActiveSheet()->mergeCells('Y'.$_row.':'.'Z'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('Y'.$_row, '复核人员：');  //设置单元格内容
-        $obj->getActiveSheet()->getstyle('Y'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $obj->getActiveSheet()->getstyle('Y'.$_row)->getFont()->setBold(true);
-        $obj->getActiveSheet()->mergeCells('AA'.$_row.':'.'AI'.$_row);   //合并单元格
-        $obj->getActiveSheet()->setCellValue('AA'.$_row, '');  //设置单元格内容
-        $obj->getActiveSheet()->getRowDimension($_row)->setRowHeight(15);
+            $obj->getActiveSheet($key)->mergeCells('A'.$_row.':'.'D'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('A'.$_row, '主办会计：');  //设置单元格内容
+            $obj->getActiveSheet($key)->getstyle('A'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('A'.$_row)->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->mergeCells('E'.$_row.':'.'K'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('E'.$_row, '');  //设置单元格内容
+            $obj->getActiveSheet($key)->mergeCells('L'.$_row.':'.'M'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('L'.$_row, '录入人员：');  //设置单元格内容
+            $obj->getActiveSheet($key)->getstyle('L'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('L'.$_row)->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->mergeCells('N'.$_row.':'.'X'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('X'.$_row, '');  //设置单元格内容
+            $obj->getActiveSheet($key)->mergeCells('Y'.$_row.':'.'Z'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('Y'.$_row, '复核人员：');  //设置单元格内容
+            $obj->getActiveSheet($key)->getstyle('Y'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $obj->getActiveSheet($key)->getstyle('Y'.$_row)->getFont()->setBold(true);
+            $obj->getActiveSheet($key)->mergeCells('AA'.$_row.':'.'AI'.$_row);   //合并单元格
+            $obj->getActiveSheet($key)->setCellValue('AA'.$_row, '');  //设置单元格内容
+            $obj->getActiveSheet($key)->getRowDimension($_row)->setRowHeight(15);
 
 
 
-        //设置全部边框
-        $styleThinBlackBorderOutline = array(
-            'borders' => array(
-                'allborders' => array( //设置全部边框
-                    'style' => \PHPExcel_Style_Border::BORDER_THIN //粗的是thick
+            //设置全部边框
+            $styleThinBlackBorderOutline = array(
+                'borders' => array(
+                    'allborders' => array( //设置全部边框
+                        'style' => \PHPExcel_Style_Border::BORDER_THIN //粗的是thick
+                    ),
+
                 ),
+            );
+            $obj->getActiveSheet($key)->getStyle( 'A2:AI'.$_row)->applyFromArray($styleThinBlackBorderOutline);
+            $obj->getActiveSheet($key)->getStyle('A2:AI'.$_row)->getFont()->setSize('9');
 
-            ),
-        );
-        $obj->getActiveSheet()->getStyle( 'A2:AI'.$_row)->applyFromArray($styleThinBlackBorderOutline);
-        $obj->getActiveSheet()->getStyle('A2:AI'.$_row)->getFont()->setSize('9');
+            $obj->getActiveSheet($key)->getStyle('F9:G'.$_row)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+            $obj->getActiveSheet($key)->getStyle('I8:AI'.$_row)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
 
-        $obj->getActiveSheet()->getStyle('F9:G'.$_row)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
-        $obj->getActiveSheet()->getStyle('I8:AI'.$_row)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
 
+        }
 
         //文件名处理
-        $fileName = $project['project_name'].'-自主研发“研发支出”辅助账';
+//        $fileName = $project['project_name'].'-自主研发“研发支出”辅助账';
+        $fileName = '自主研发“研发支出”辅助账';
         if(!$fileName){
 
             $fileName = uniqid(time(),true);
@@ -1310,8 +1321,11 @@ class Rdsystem extends Frontend
         $objDrawing = new \PHPExcel_Worksheet_Drawing();
         $objDrawing->setPath($image1);
         // 设置图片的宽度
-        $objDrawing->setHeight(100);
-        $objDrawing->setWidth(260);
+
+//        $objDrawing->setWidth(295);
+
+        $objDrawing->setResizeProportional(false);
+        $objDrawing->setWidthAndHeight(298,60);
         $objDrawing->setCoordinates('A4');
         $objDrawing->setWorksheet($obj->getActiveSheet());
 
@@ -1323,6 +1337,7 @@ class Rdsystem extends Frontend
         $objDrawing->setCoordinates('A4');
         $objDrawing->setWorksheet($obj->getActiveSheet());
 
+        $obj->getActiveSheet()->getColumnDimension('A')->setWidth(40);
         //样式
         $obj->getActiveSheet()->getColumnDimension('A')->setWidth(37);
         $obj->getActiveSheet()->getRowDimension('5')->setRowHeight(55);
@@ -1357,34 +1372,34 @@ class Rdsystem extends Frontend
         $data = Db::name('project')
             ->alias('a')
             ->join('rddetail b','b.pid = a.id','INNER')
-            ->where('a.user_id',$this->auth->id)
-            ->where('b.user_id',$this->auth->id)
-            ->whereRaw("DATE_FORMAT(b.Date,'%Y') = ".$year)
+            ->where('a.user_id',2)
+            ->where('b.user_id',2)
+            ->whereRaw("DATE_FORMAT(b.date,'%Y') = ".$year)
             ->field(['a.id','project_name','project_number'])
             ->group('b.pid')
             ->select();
         foreach ($data as $key=>$val){
-            $totalA = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->field(Db::raw("SUM(amount) as total"))->find();
-            $ryrgfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','11,12,13')->field(Db::raw("SUM(amount) as total"))->find();
-            $zjtrfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','21,22,23,24,25,26,27,28')->field(Db::raw("SUM(amount) as total"))->find();
-            $zjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','31,32,33,34')->field(Db::raw("SUM(amount) as total"))->find();
-            $wxzctxfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','41,42,43')->field(Db::raw("SUM(amount) as total"))->find();
-            $xcpsjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','51,52')->field(Db::raw("SUM(amount) as total"))->find();
-            $zbfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','53,54,61,62')->field(Db::raw("SUM(amount) as total"))->find();
-            $other = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','71,72,73,74,75,76')->field(Db::raw("SUM(amount) as total"))->find();
-            $wtyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','81,82')->field(Db::raw("SUM(amount) as total"))->find();
-            $jnyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereIn('type','81')->field(Db::raw("SUM(amount) as total"))->find();
+            $totalA = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereNotIn('type','81,82')->field(Db::raw("SUM(amount) as total"))->find();
+            $ryrgfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','11,12,13')->field(Db::raw("SUM(amount) as total"))->find();
+            $zjtrfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','21,22,23,24,25,26,27,28')->field(Db::raw("SUM(amount) as total"))->find();
+            $zjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','31,32,33,34')->field(Db::raw("SUM(amount) as total"))->find();
+            $wxzctxfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','41,42,43')->field(Db::raw("SUM(amount) as total"))->find();
+            $xcpsjfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','51,52')->field(Db::raw("SUM(amount) as total"))->find();
+            $zbfy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','53,54,61,62')->field(Db::raw("SUM(amount) as total"))->find();
+            $other = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','71,72,73,74,75,76')->field(Db::raw("SUM(amount) as total"))->find();
+            $wtyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','81,82')->field(Db::raw("SUM(amount) as total"))->find();
+            $jnyffy = Db::name('rddetail')->where(['pid'=>$val['id'],'lend_state'=>1])->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)->whereIn('type','81')->field(Db::raw("SUM(amount) as total"))->find();
 
-            $data[$key]['totalA'] = $totalA['total']==null ? '0' : $totalA['total'];
-            $data[$key]['ryrgfy'] = $ryrgfy['total']==null ? '0' : $ryrgfy['total'];
-            $data[$key]['zjtrfy'] = $zjtrfy['total']==null ? '0' : $zjtrfy['total'];
-            $data[$key]['zjfy'] = $zjfy['total']==null ? '0' : $zjfy['total'];
-            $data[$key]['wxzctxfy'] = $wxzctxfy['total']==null ? '0' : $wxzctxfy['total'];
-            $data[$key]['xcpsjfy'] = $xcpsjfy['total']==null ? '0' : $xcpsjfy['total'];
-            $data[$key]['zbfy'] = $zbfy['total']==null ? '0' : $zbfy['total'];
-            $data[$key]['other'] = $other['total']==null ? '0' : $other['total'];
-            $data[$key]['wtyffy'] = $wtyffy['total']==null ? '0' : $wtyffy['total'];
-            $data[$key]['jnyffy'] = $jnyffy['total']==null ? '0' : $jnyffy['total'];
+            $data[$key]['totalA'] = $totalA['total']==null ? '0' : round($totalA['total']/10000,2);
+            $data[$key]['ryrgfy'] = $ryrgfy['total']==null ? '0' : round($ryrgfy['total']/10000,2);
+            $data[$key]['zjtrfy'] = $zjtrfy['total']==null ? '0' : round($zjtrfy['total']/10000,2);
+            $data[$key]['zjfy'] = $zjfy['total']==null ? '0' : round($zjfy['total']/10000,2);
+            $data[$key]['wxzctxfy'] = $wxzctxfy['total']==null ? '0' : round($wxzctxfy['total']/10000,2);
+            $data[$key]['xcpsjfy'] = $xcpsjfy['total']==null ? '0' : round($xcpsjfy['total']/10000,2);
+            $data[$key]['zbfy'] = $zbfy['total']==null ? '0' : round($zbfy['total']/10000,2);
+            $data[$key]['other'] = $other['total']==null ? '0' : round($other['total']/10000,2);
+            $data[$key]['wtyffy'] = $wtyffy['total']==null ? '0' : round($wtyffy['total']/10000,2);
+            $data[$key]['jnyffy'] = $jnyffy['total']==null ? '0' : round($jnyffy['total']/10000,2);
         }
 
         //内容
@@ -1464,6 +1479,17 @@ class Rdsystem extends Frontend
 
         $obj->getActiveSheet()->setCellValue($cellName[$cellIndex-1].'19', '日期：');  //设置合并后的单元格内容
 
+        //锁定
+        //$obj->getActiveSheet()->getStyle('A1:E19')->getProtection()->setLocked(\PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+        $obj->getActiveSheet()->getProtection()->setSheet(true);
+        $obj->getActiveSheet()->protectCells('A1:E19', 'PHPExcel');
+
+        $obj->getActiveSheet()->getStyle('A1:E19')
+            ->getProtection()
+            ->setHidden(\PHPExcel_Style_Protection::PROTECTION_PROTECTED);
+        $obj->getActiveSheet()->getStyle('A1:E19')
+            ->getProtection()
+            ->setLocked(\PHPExcel_Style_Protection::PROTECTION_PROTECTED);
         //设置全部边框
         $styleThinBlackBorderOutline = array(
             'borders' => array(
@@ -1493,7 +1519,6 @@ class Rdsystem extends Frontend
         }
 
         $objWrite = \PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
-
         $isDown = true;
         if($isDown){   //网页下载
 
@@ -1519,6 +1544,7 @@ class Rdsystem extends Frontend
 
     }
 
+    //辅助账归集导出
     public function exportCollect()
     {
         $year = $this->request->param('year', 2017);
@@ -1549,6 +1575,8 @@ class Rdsystem extends Frontend
         $obj->getActiveSheet()->mergeCells('B4'.':'.'C4');   //合并单元格
         $obj->getActiveSheet()->setCellValue('B4', '项目');  //设置合并后的单元格内容
         $obj->getActiveSheet()->getstyle('B4')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $obj->getActiveSheet()->setCellValue('D3', '金额单位：元(列至角分');  //设置合并后的单元格内容
+        $obj->getActiveSheet()->getstyle('D3')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $obj->getActiveSheet()->setCellValue('D4', '发生额');  //设置合并后的单元格内容
         $obj->getActiveSheet()->getstyle('D4')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
@@ -1722,7 +1750,7 @@ class Rdsystem extends Frontend
         $obj->getActiveSheet()->setCellValue('D6', (float)$cate[11]);  //设置合并后的单元格内容
         $obj->getActiveSheet()->setCellValue('D7', (float)$cate[12]);  //设置合并后的单元格内容
         $obj->getActiveSheet()->setCellValue('D8', (float)$cate[13]);  //设置合并后的单元格内容
-        $total9 = (float)$cate[21]+(float)$cate[28];
+        $total9 = (float)$cate[21]+(float)$cate[22]+(float)$cate[23]+(float)$cate[24]+(float)$cate[25]+(float)$cate[26]+(float)$cate[27]+(float)$cate[28];
         $obj->getActiveSheet()->setCellValue('D9', $total9);  //设置合并后的单元格内容
         $obj->getActiveSheet()->setCellValue('D10', (float)$cate[21]);  //设置合并后的单元格内容
         $obj->getActiveSheet()->setCellValue('D11', (float)$cate[22]);  //设置合并后的单元格内容
@@ -1760,12 +1788,12 @@ class Rdsystem extends Frontend
         $total38 = $total5+$total9+$total18+$total21+$total25;
         $obj->getActiveSheet()->setCellValue('D38', $total38);  //设置合并后的单元格内容
         $total39 = $total38*0.1/(1-0.1);
-        $obj->getActiveSheet()->setCellValue('D39', $total39);  //设置合并后的单元格内容
-        $total40 = $total39>$total38 ? $total38+$total30 : $total38+$total39;
-        $obj->getActiveSheet()->setCellValue('D40', $total40);  //设置合并后的单元格内容
+        $obj->getActiveSheet()->setCellValue('D39', round($total39,2));  //设置合并后的单元格内容
+        $total40 = $total39>$total30 ? $total38+$total30 : $total38+$total39;
+        $obj->getActiveSheet()->setCellValue('D40', round($total40,2));  //设置合并后的单元格内容
         $obj->getActiveSheet()->setCellValue('D41', 0);  //设置合并后的单元格内容
         $obj->getActiveSheet()->setCellValue('D42', 0);  //设置合并后的单元格内容
-        $obj->getActiveSheet()->setCellValue('D43', $total40*0.75);  //设置合并后的单元格内容
+        $obj->getActiveSheet()->setCellValue('D43', round($total40*0.75,2));  //设置合并后的单元格内容
 
 
         //设置全部边框
@@ -1781,7 +1809,7 @@ class Rdsystem extends Frontend
 
 
         //文件名处理
-        $fileName = '研究开发费用结构明细表';
+        $fileName = '研发项目可加计扣除研究开发费用情况归集表';
         if(!$fileName){
 
             $fileName = uniqid(time(),true);
@@ -2021,7 +2049,7 @@ class Rdsystem extends Frontend
             ->join('rddetail b','b.pid = a.id','INNER')
             ->where('a.user_id',$this->auth->id)
 //            ->where('lend_state',1)
-            ->whereRaw("DATE_FORMAT(b.Date,'%Y') = ".$year)
+            ->whereRaw("DATE_FORMAT(b.date,'%Y') = ".$year)
             ->field(['a.id','project_name','project_number'])
             ->group('b.pid')
             ->select();
@@ -2031,6 +2059,7 @@ class Rdsystem extends Frontend
         $balance32 = 0;$balance41 = 0;$balance42 = 0;$balance43 = 0;$balance51 = 0;$balance52 = 0;$balance53 = 0;$balance54 = 0;$balance71 = 0;$balance72 = 0;
         $balance73 = 0;$balance74 = 0;$balance75 = 0;$balance81 = 0;$balance82 = 0;$balancetotal = 0;$fyxe=0;$kcze=0;
         $xh = 1;
+
         foreach ($data as $key=>$value) {
             $obj->getActiveSheet()->setCellValue('B'.$_row, $xh);  //设置合并后的单元格内容
             $obj->getActiveSheet()->setCellValue('C'.$_row, $value['project_name']);  //设置合并后的单元格内容
@@ -2039,9 +2068,16 @@ class Rdsystem extends Frontend
             $obj->getActiveSheet()->setCellValue('F'.$_row, '费用化支出');  //设置合并后的单元格内容
             $obj->getActiveSheet()->setCellValue('G'.$_row, '已完成');  //设置合并后的单元格内容
 
-            $all = Db::name('rddetail')->where(['pid'=>$value['id'],'lend_state'=>1])->field([Db::raw("SUM(amount) as total"),'type'])->group('type')->select();
+            $all = Db::name('rddetail')->where(['pid'=>$value['id'],'lend_state'=>1])
+                ->whereRaw("DATE_FORMAT(date,'%Y') = ".$year)
+                ->field([Db::raw("SUM(amount) as total"),'type'])
+                ->group('type')
+                ->select();
             $balancetotals = 0;
+            $amount71 =0 ; $amount72 = 0; $amount73 = 0; $amount74 = 0; $amount75 = 0;
+
             foreach ($all as $val) {
+                $balancec81 = 0; $balancec82 = 0;
                 switch ($val['type']) {
                     case '11':
                         $balance11 += (float)$val['total'];
@@ -2145,51 +2181,66 @@ class Rdsystem extends Frontend
                         break;
                     case '71':
                         $balance71 += (float)$val['total'];
+                        $amount71 = (float)$val['total'];
                         $obj->getActiveSheet()->setCellValue('AF' . $_row, $val['total']);
                         break;
                     case '72':
                         $balance72 += (float)$val['total'];
+                        $amount72= (float)$val['total'];
                         $obj->getActiveSheet()->setCellValue('AG' . $_row, $val['total']);
                         break;
                     case '73':
                         $balance73 += (float)$val['total'];
+                        $amount73 = (float)$val['total'];
                         $obj->getActiveSheet()->setCellValue('AH' . $_row, $val['total']);
                         break;
                     case '74':
                         $balance74 += (float)$val['total'];
+                        $amount74 = (float)$val['total'];
                         $obj->getActiveSheet()->setCellValue('AI' . $_row, $val['total']);
                         break;
                     case '75':
                         $balance75 += (float)$val['total'];
+                        $amount75 = (float)$val['total'];
                         $obj->getActiveSheet()->setCellValue('AJ' . $_row, $val['total']);
                         break;
                     case '81':
-                        $balance81 += (float)$val['total'];
+                        //$balance81 += (float)$val['total'];
+                        $balancec81 = (float)$val['total'];
                         //$obj->getActiveSheet()->setCellValue('AJ' . $_row, $val['total']);
                         break;
                     case '82':
                         $balance82 += (float)$val['total'];
+                        $balancec82 = (float)$val['total'];
                         $obj->getActiveSheet()->setCellValue('AM' . $_row, $val['total']);
                         break;
+                    default:
+                        break;
                 }
-                $balancec81 = $balance81+$balance82;
-                $balance81 += $balancec81;
-                $obj->getActiveSheet()->setCellValue('AL' . $_row, $balancec81);
 
+                $balancect81 = $balancec81+$balancec82;
+                $balance81 += $balancect81;
+                if((int)$balancect81!==0){
+                    $obj->getActiveSheet()->setCellValue('AL' . $_row, $balancect81);
+                }
 
+                // $balancetotals 38
                 $obj->getActiveSheet()->setCellValue('AN' . $_row, $balancetotals);
-                $fyxes = $balancetotals*0.1/0.9;
+                $fyxes = round($balancetotals*0.1/0.9,2);//39
                 $obj->getActiveSheet()->setCellValue('AO' . $_row, $fyxes);
 
-                $othertotals = $balance71+$balance72+$balance73+$balance74+$balance75;
+                $othertotals = (float)$amount71+(float)$amount72+(float)$amount73+(float)$amount74+(float)$amount75;
+
                 if($fyxes>$othertotals){
-                    $kczes = (float)$balancetotal+(float)$othertotals;
+                    $kczes = (float)$balancetotals+(float)$othertotals+($balancect81*0.8);
                 }else{
-                    $kczes = (float)$balancetotal+$fyxe;
+                    $kczes = (float)$balancetotals+(float)$fyxes+($balancect81*0.8);
                 }
                 $obj->getActiveSheet()->setCellValue('AP' . $_row, $kczes);
                 $obj->getActiveSheet()->setCellValue('AQ' . $_row, '0.00');
             }
+
+
             $balancetotal += $balancetotals;
             $fyxe += $fyxes;
             $kcze += $kczes;
@@ -2225,7 +2276,7 @@ class Rdsystem extends Frontend
         $obj->getActiveSheet()->setCellValue('AJ8',Number_format($balance75, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AK8',Number_format(0, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AL8',Number_format($balance81, 2, '.',''));
-        $obj->getActiveSheet()->setCellValue('AM8',Number_format($balance81, 2, '.',''));
+        $obj->getActiveSheet()->setCellValue('AM8',Number_format($balance82, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AN8',Number_format($balancetotal, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AO8',Number_format($fyxe, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AP8',Number_format($kcze, 2, '.',''));
@@ -2258,7 +2309,7 @@ class Rdsystem extends Frontend
         $obj->getActiveSheet()->setCellValue('AJ9',Number_format($balance75, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AK9',Number_format(0, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AL9',Number_format($balance81, 2, '.',''));
-        $obj->getActiveSheet()->setCellValue('AM9',Number_format($balance81, 2, '.',''));
+        $obj->getActiveSheet()->setCellValue('AM9',Number_format($balance82, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AN9',Number_format($balancetotal, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AO9',Number_format($fyxe, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AP9',Number_format($kcze, 2, '.',''));
@@ -2291,7 +2342,7 @@ class Rdsystem extends Frontend
         $obj->getActiveSheet()->setCellValue('AJ10',Number_format($balance75, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AK10',Number_format(0, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AL10',Number_format($balance81, 2, '.',''));
-        $obj->getActiveSheet()->setCellValue('AM10',Number_format($balance81, 2, '.',''));
+        $obj->getActiveSheet()->setCellValue('AM10',Number_format($balance82, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AN10',Number_format($balancetotal, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AO10',Number_format($fyxe, 2, '.',''));
         $obj->getActiveSheet()->setCellValue('AP10',Number_format($kcze, 2, '.',''));
@@ -2325,12 +2376,13 @@ class Rdsystem extends Frontend
         $obj->getActiveSheet()->getStyle( 'A2:AQ'.$last)->applyFromArray($styleThinBlackBorderOutline);
         $obj->getActiveSheet()->getStyle( 'A2:AQ'.$last)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $obj->getActiveSheet()->getStyle('A2:AQ'.$last)->getAlignment()->setWrapText(true);
+        $obj->getActiveSheet()->getStyle('A2:AQ'.$last)->getFont()->setSize(9);
 
         $obj->getActiveSheet()->getStyle( 'A7:A12')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $obj->getActiveSheet()->getStyle( 'L7:AQ6')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $obj->getActiveSheet()->getStyle( 'A3:AQ6')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $obj->getActiveSheet()->getStyle( 'B13:B'.$_row)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $obj->getActiveSheet()->getColumnDimension('A')->setWidth('5');
+        $obj->getActiveSheet()->getColumnDimension('A')->setWidth('10');
         $obj->getActiveSheet()->getColumnDimension('C')->setWidth('15');
         $obj->getActiveSheet()->getColumnDimension('E')->setWidth('7');
         $obj->getActiveSheet()->getColumnDimension('F')->setWidth('7');
@@ -2367,11 +2419,11 @@ class Rdsystem extends Frontend
 
         }
 
-        $savePath = './';
+        $savePath = ROOT_PATH.DS.'public'.DS;
 
         $_fileName = iconv("utf-8", "gb2312", $fileName);   //转码
 
-        $_savePath = $savePath.$_fileName.'.xlsx';
+        $_savePath = $savePath.$_fileName.'.xls';
 
         $objWrite->save($_savePath);
 
@@ -2380,4 +2432,218 @@ class Rdsystem extends Frontend
         return $savePath.$fileName.'.xlsx';
 
     }
+
+
+    /**  研究开发管理制度  **/
+
+    /*
+     * 客户列表
+     */
+    public function systemlist(){
+        $limit = $this->request->param('limit',10);
+        $data = Db::name('research_system')
+            ->where('user_id',$this->auth->id)
+            ->order('id', 'asc')
+            ->paginate($limit);
+        $items = $data->items();
+
+        $yyzd = Db::name('cms_archives')
+            ->alias('a')
+            ->join('cms_addonyyzd b','a.id = b.id')
+            ->where('model_id',7)
+            ->field(['a.id','a.title'])
+            ->select();
+
+        $this->assign('items',$items);
+        $this->assign('data',$data);
+        $this->assign('yyzd',$yyzd);
+        $this->view->assign('title', '研发制度');
+        return $this->fetch();
+    }
+
+
+    public function dcphpword(){
+        $dctype = $this->request->param('dctype','word');
+        $type = $this->request->param('type');
+        $category = $this->request->param('category');
+
+        $hash = Db::name('cms_userwords')->where(['type'=>$type,'category'=>$category])->find();
+
+        $dateArr = [
+            1=>['title'=>'研究开发组织管理制度','key'=>'Date_management'],
+            2=>['title'=>'研发投入核算管理制度','key'=>'Date_accounting'],
+            3=>['title'=>'研发部门成立文件','key'=>'Date_depart'],
+            4=>['title'=>'科技成果转化管理办法','key'=>'Date_Achievements'],
+            5=>['title'=>'科技成果转化奖励制度','key'=>'Date_reward'],
+            6=>['title'=>'企业创新奖励制度','key'=>'Date_Innovation'],
+            7=>['title'=>'科研人员培养进修及技能培训管理办法','key'=>'Date_training'],
+            8=>['title'=>'优秀科研人才引进及绩效评价奖励管理办法','key'=>'Date_talent_introduction'],
+            9=>['title'=>'科研人员绩效考核及奖励制度','key'=>'Date_performance']
+        ];
+
+        $dateArr = [
+            '研究开发组织管理制度'=>'Date_management',
+            '研发投入核算管理制度'=>'Date_accounting',
+            '研发部门成立文件'=>'Date_depart',
+            '科技成果转化管理办法'=>'Date_Achievements',
+            '科技成果转化奖励制度'=>'Date_reward',
+            '企业创新奖励制度'=>'Date_Innovation',
+            '科研人员培养进修及技能培训管理办法'=>'Date_training',
+            '优秀科研人才引进及绩效评价奖励管理办法'=>'Date_talent_introduction',
+            '科研人员绩效考核及奖励制度'=>'Date_performance'
+        ];
+
+        if($hash){
+            //如果不是最新生成的word，删除原本的word生成最新的word文档
+            if($hash['is_new']==0){
+                unlink($hash['file_path'].DS.$hash['file_name']);
+
+                $company = Db::name('research_system')->where('user_id',$this->auth->id)->find();
+                $title = $category;
+                $bzrqs = $dateArr[$category];
+                $bzrq = date('Y年m月d日',strtotime($bzrqs));
+                $sxrq = date('Y年m月01日',strtotime('+1 month',strtotime($bzrqs)));
+                $img_url = 'http://'.$_SERVER['HTTP_HOST'].$company['Company_logo'];
+
+                $templateProcessor = new TemplateProcessor('doc/'.$title.'.docx');
+                $templateProcessor->setValue('company', $company['company2']);
+                $templateProcessor->setValue('title', $title);
+                $templateProcessor->setValue('bzrq', $bzrq);
+                $templateProcessor->setValue('sxrq', $sxrq);
+                $templateProcessor->setImageValue('image', ['path'=>$img_url,'height'=>'40','width'=>'60']);
+
+                $file_url = ROOT_PATH.'public'.DS.'doc/user'.$this->auth->id;
+                $file_name = date('YmdHis').'.docx';
+                if(!file_exists($file_url)){
+                    mkdir($file_url);
+                    chmod($file_url,777);
+                }
+                $templateProcessor->saveAs($file_url.DS.$file_name);
+                Db::name('cms_userwords')->where(['type'=>$type,'category'=>$title])->update(['file_path'=>$file_url,'file_name'=>$file_name,'is_new'=>1]);
+            }else if($hash['is_new']==1){
+                if($dctype=='word'){
+                    $this->download($hash['file_path'].DS.$hash['file_name']);
+                }else if($dctype=='pdf'){
+                    $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'doc/user'.$this->auth->id.DS.$hash['file_name'];
+                    $url = urlencode($url);
+                    $word2pdf = 'http://ow365.cn/?i=18439&info=2&furl='.$url;
+                    header("location:".$word2pdf);
+                }
+                exit;
+            }
+        }else{
+
+            $company = Db::name('research_system')->where('user_id',$this->auth->id)->find();
+
+            $title = $category;
+            $bzrqs = $dateArr[$category];
+            $bzrq = date('Y年m月d日',strtotime($bzrqs));
+            $sxrq = date('Y年m月01日',strtotime('+1 month',strtotime($bzrqs)));
+            $img_url = 'http://'.$_SERVER['HTTP_HOST'].$company['Company_logo'];
+
+            $templateProcessor = new TemplateProcessor('doc/'.$title.'.docx');
+            $templateProcessor->setValue('company', $company['company2']);
+            $templateProcessor->setValue('title', $title);
+            $templateProcessor->setValue('bzrq', $bzrq);
+            $templateProcessor->setValue('sxrq', $sxrq);
+            $templateProcessor->setImageValue('image', ['path'=>$img_url,'height'=>'40','width'=>'60']);
+
+            $file_url = ROOT_PATH.'public'.DS.'doc/user'.$this->auth->id;
+            $file_name = date('YmdHis').'.docx';
+            if(!file_exists($file_url)){
+                mkdir($file_url);
+                chmod($file_url,777);
+            }
+            $templateProcessor->saveAs($file_url.DS.$file_name);
+
+            $data = [
+                'user_id'=>$this->auth->id,
+                'type'=>$type,
+                'category'=>$category,
+                'file_path'=>$file_url,
+                'file_name'=>$file_name,
+                'is_new'=>1,
+                'create_time'=>time(),
+                'update_time'=>time()
+            ];
+            Db::name('cms_userwords')->insert($data);
+        }
+
+        //下载文件
+        if($dctype=='word'){
+            $this->download($file_url.DS.$file_name);
+        }else if($dctype=='pdf'){
+            $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'doc/user'.$this->auth->id.DS.$hash['file_name'];
+            $url = urlencode($url);
+            $word2pdf = 'http://ow365.cn/?i=18439&info=2&furl='.$url;
+            header("location:".$word2pdf);
+        }
+
+    }
+
+    /**
+     * 导出制度PDF
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+
+    public function dcpdf(){
+        $type = $this->request->param('type');
+        $category = $this->request->param('category');
+    }
+
+
+
+    function word2pdf()
+    {
+        return urlencode('http://z.zhongkechuang.net/doc/研究开发组织管理制度.docx');exit;
+//        Settings::setPdfRendererName(Settings::PDF_RENDERER_TCPDF);
+//        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+        Settings::setPdfRendererName(Settings::PDF_RENDERER_MPDF);
+
+//        Settings::setPdfRendererPath(VENDOR_PATH.'tecnickcom/tcpdf');
+//        Settings::setPdfRendererPath(VENDOR_PATH.'dompdf/dompdf');
+        Settings::setPdfRendererPath(VENDOR_PATH.'mpdf/mpdf');
+
+        $phpWord = IOFactory::load('./doc/研究开发组织管理制度.docx', 'Word2007');
+        $pdf = IOFactory::createWriter($phpWord,'PDF');
+
+        $pdf->save('doc/'.time().'mpdf.pdf', 'PDF',true);
+
+    }
+
+
+    public function pdf2pdf(){
+         $dashboard_pdf_file = ROOT_PATH.'public/doc/1556263772tt_201904261603471_20190426160559.pdf';
+        $company = Db::name('research_system')->where('user_id',$this->auth->id)->find();
+         $pdf = new mPDF();
+//         $pdf->SetImportUse();
+
+//         $pagecount = $pdf->SetSourceFile($dashboard_pdf_file);
+//         for($i= 1; $i<= $pagecount; $i++){
+//            $import_page = $pdf->ImportPage($i);
+//            $pdf->UseTemplate($import_page);
+//             if($i< $pagecount)
+//             $pdf->AddPage();
+//        }
+//         $file = 'doc/'.time().'tt.pdf';
+//        $pdf->Output($file,'F');
+//         unset($pdf);
+
+//        $pdf = new mPDF();
+
+        $pdf->percentSubset = 0;
+        $search = array(
+            'Bzrq',
+        );
+
+        $replacement = array(
+            "20190901"
+        );
+
+        $pdf->OverWrite('doc/1556266164tt.pdf', $search, $replacement, 'I', 'mpdf.pdf' ) ;
+//
+    }
+
 }

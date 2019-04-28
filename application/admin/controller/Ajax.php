@@ -18,7 +18,7 @@ use think\Lang;
 class Ajax extends Backend
 {
 
-    protected $noNeedLogin = ['lang','addCompany'];
+    protected $noNeedLogin = ['lang','addCompany','upload'];
     protected $noNeedRight = ['*'];
     protected $layout = '';
 

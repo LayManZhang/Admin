@@ -1,0 +1,288 @@
+<style>
+    .panel-post {
+        position: relative;
+    }
+
+    .btn-post {
+        position: absolute;
+        right: 0;
+        bottom: 10px;
+    }
+
+    .img-border {
+        border-radius: 5px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    input[type="file"]{
+        display: none;
+    }
+    table{
+        table-layout : fixed;
+    }
+
+    table tbody tr td,table tbody tr th{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+<script src="/assets/libs/jquery/dist/jquery.js"></script>
+<script src="/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+    var item = 0;
+    var count = new Array();
+    $(function () {
+        datalength = $("input[name=btSelectItem]").length;
+    });
+
+    function edit(id) {
+        var url = "{:url('index/cms.diyform/index?diyname=research')}";
+        url += '?id='+id;
+        window.location.href=url;
+    }
+
+    function del(id) {
+        //询问框
+        layer.confirm('是否删除该条记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var ids = new Array();
+            ids.push(id);
+            ids = ids.join(',');
+            $.ajax({
+                url:"{:url('index/cms.rdsystem/delete')}",
+                type:'post',
+                data : {id:ids,diyname:'Research'},
+                success : function(data){
+                    if(data.code==1){
+                        layer.msg(data.msg,{time: 500});
+                        var tbody = $('.table tbody').find('tr');
+                        var router = layui.router();
+                        var page = router.search.comid;
+                        if(tbody.length==0){
+
+                        }
+                        location.reload();
+                    }else{
+                        layer.msg('删除失败',{time: 500});
+                    }
+                }
+            });
+        }, function(){
+            //
+        });
+    }
+
+    function delall() {
+
+        if(count.length<=0){
+            layer.msg('未选择数据',{time:1000});return;
+        }
+        //询问框
+        layer.confirm('是否删除多条记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            ids = count.join(',');
+            $.ajax({
+                url:"{:url('index/cms.rdsystem/delete')}",
+                type:'post',
+                data : {id:ids,diyname:'Research'},
+                success : function(data){
+                    if(data.code==1){
+                        layer.msg(data.msg,{time: 500});
+                        location.reload();
+                    }else{
+                        layer.msg('删除失败',{time: 500});
+                    }
+                }
+            });
+        }, function(){
+            //
+        });
+    }
+
+    function btSelectAll(){
+        var itemArr = $("input[name=btSelectItem]");
+        if($("input[name=btSelectAll]").is(':checked')) {
+            item = datalength;
+            $("input[name=btSelectItem]").prop('checked',true);
+            $.each(itemArr,function (i,d) {
+                count.push(parseFloat($(this).attr('val')));
+            })
+        }else{
+            $("input[name=btSelectItem]").prop('checked',false);
+            item = 0;
+            count=[];
+        }
+    };
+
+
+    function btSelectItem(index){
+        if($("#btSelectItem"+index).is(':checked')==true) {
+            count.push(index);
+            item++;
+        }else{
+            var k = count.indexOf(index);
+            if (k > -1) {
+                count.splice(k, 1);
+            }
+            item--;
+        }
+        if(item==datalength){
+            $("input[name=btSelectAll]").prop('checked',true);
+        }else{
+            $("input[name=btSelectAll]").prop('checked',false);
+        }
+    }
+    //解决报错但不影响功能
+    function SlyarErrors() {
+        return true;
+    }
+    window.onerror = SlyarErrors;
+</script>
+<script src="/assets/libs/layui/layui.js"></script>
+<script>
+    layui.use('upload', function(){
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#btn-import-file' //绑定元素
+            ,url: "{:url('index/cms.rdsystem/import')}" //上传接口
+            ,accept: 'file' //允许上传的文件类型
+            ,exts: 'csv|xls|xlsx'
+            ,data: {diyname:'Research'}
+            ,done: function(res){
+                if(res.code==1){
+                    layer.msg('导入成功',{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }else{
+                    layer.msg('导入失败',{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }
+                //上传完毕回调
+            }
+            ,error: function(){
+                //请求异常回调
+                layer.msg('导入失败', {
+                    time: 1000, end: function () {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+
+    layui.use('upload', function(){
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#btn-import-files' //绑定元素
+            ,url: "{:url('index/cms.rdsystem/importAll')}" //上传接口
+            ,accept: 'file' //允许上传的文件类型
+            ,exts: 'csv|xls|xlsx'
+            ,data: {}
+            ,done: function(res){
+                var index = layer.load(1, {
+                    shade: [0.1,'#fff'], //0.1透明度的白色背景
+                });
+                layer.close(index);
+                if(res.code==1){
+                    layer.msg(res.msg,{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }else{
+                    layer.msg(res.msg,{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }
+                //上传完毕回调
+            }
+            ,error: function(){
+                layer.close(index);
+                //请求异常回调
+                layer.msg('服务器异常', {
+                    time: 1000, end: function () {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+<div class="container mt-20 list">
+    <div id="content-container" class="container">
+        <div class="row">
+            <div class="col-md-3">
+                {include file="common/sidenav" /}
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-user">
+                    <div class="panel-body">
+                        <div class="page-header panel-post">
+                            <h2>明细账</h2>
+                            <em style="font-size: 10px">为保证数据的有效性，请先<a href="{:url('index/cms.rdsystem/importtips')}">下载模板</a>，并根据模板写入数据，再进行导入</em>
+                            <br>
+                            <a href="{:url('index/cms.diyform/index?diyname=research')}" class="btn btn-success btn-add" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                            <a href="javascript:;" class="btn btn-danger btn-del btn-disabled" title="{:__('Delete')}" onclick="delall();"><i class="fa fa-trash"></i> {:__('Delete')}</a>
+                            <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入明细账')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('导入')}</a>
+                            <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入费用明细账')}" id="btn-import-files" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('导入费用明细')}</a>
+                        </div>
+                        <?php if(!empty($items)){ ?>
+                        <div class="row">
+                            <table class="table table-bordered table-hover" lay-even lay-skin="nob">
+                                <thead>
+                                <tr>
+                                    <th style="width: 30px;"><input type="checkbox" class="btnSelectAll" name="btSelectAll"  onclick="btSelectAll();"></th>
+                                    <th style="width: 85px;">凭证日期</th>
+                                    <th style="width: 70px;">凭证号</th>
+                                    <th>会计科目</th>
+                                    <th style="width: 100px;">摘要</th>
+                                    <th style="width: 100px;">费用类别</th>
+                                    <th>借方金额</th>
+                                    <th>贷方金额</th>
+                                    <th style="text-align: center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='items' id='item'}
+                                <tr>
+                                    <td><input type="checkbox" class="btnSelectItem" id="btSelectItem{$item.id}" name="btSelectItem" val="{$item.id}" onclick="btSelectItem({$item.id});"></td>
+                                    <td>{$item.Date}</td>
+                                    <td>{$item.Document_number}</td>
+                                    <td title="{$item.Acct_Tit}">{$item.Acct_Tit}</td>
+                                    <td title="{$item.Abstract}">{$item.Abstract}</td>
+                                    <td style="overflow: hidden;" title="{$item.Category}">{$item.Category}</td>
+                                    <td>{$item.Debit_amount}</td>
+                                    <td>{$item.Credit_amount}</td>
+                                    <td style="text-align: center">
+                                        <a href="javascript:;" class="edit" onclick="edit({$item.id})">编辑</a>
+                                        <a href="javascript:;" class="edit" onclick="del({$item.id})">删除</a></td>
+                                </tr>
+                                {/volist}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <?php }else{ ?>
+                        <div class="row" style="text-align: center">
+                             {:__('暂无数据')}
+                        </div>
+                        <?php } ?>
+                        <hr>
+                       {$data->render()}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -46,6 +46,7 @@ class Diyform extends Frontend
         return $this->view->fetch();
     }
 
+    //项目评估列表
     public function assessment_list(){
         $fieldsList = \app\admin\model\cms\Fields::where('diyform_id',2)->where('type', '<>', 'text')->select();
         $fieldsArr = [];
@@ -181,7 +182,7 @@ class Diyform extends Frontend
             }
             //$this->success($diyform['successtips'] ? $diyform['successtips'] : '提交成功！', url('index/cms.diyform/assessment_list'));
         }
-        return $data;
+        return json($data);
 
     }
 
@@ -233,17 +234,17 @@ class Diyform extends Frontend
             $data[$key]['Direction_text'] = implode(',',$DirectionArr);
             $data[$key]['Fields_text'] = implode(',',$FieldsArr);
         }
-        return $data;
+        return json($data);
     }
 
     //项目评审详情
     public function get_xmps(){
         $id = $this->request->get('id');
         $data = db('cms_assessment')->where('id',$id)->find();
-        return $data;
+        return json($data);
     }
 
-
+    //获取PDF数据
     public function getdata(){
         $id = $this->request->get('id');
         $ids = $this->request->get('ids');
@@ -278,6 +279,7 @@ class Diyform extends Frontend
         $this->pdf($data_arr);
     }
 
+    //导出评估结果PDF
     public function pdf($data){
         require_once(VENDOR_PATH.'\tecnickcom\tcpdf\tcpdf.php');
 

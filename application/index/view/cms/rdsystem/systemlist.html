@@ -1,0 +1,110 @@
+<div class="container mt-20 list">
+    <div id="content-container" class="container">
+        <div class="row">
+            <div class="col-md-3">
+                {include file="common/sidenav" /}
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-user">
+                    <div class="panel-body">
+                        <div class="page-header panel-post">
+                            <h2>研发制度</h2>
+                        </div>
+                        <?php if(!empty($items)){ ?>
+                        <div class="row">
+                            <table class="table table-bordered table-hover" lay-even lay-skin="nob">
+                                <thead>
+                                <tr>
+                                    <!--<th style="width: 30px;"><input type="checkbox" class="btnSelectAll" name="btSelectAll"  onclick="btSelectAll();"></th>-->
+                                    <th>公司名称</th>
+                                    <th>公司简称</th>
+                                    <th>研发部门名称</th>
+                                    <th style="text-align: center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='items' id='item'}
+                                <tr>
+                                    <!--<td><input type="checkbox" class="btnSelectItem" id="btSelectItem{$item.id}" name="btSelectItem" val="{$item.id}" onclick="btSelectItem({$item.id});"></td>-->
+                                    <td>{$item.company2}</td>
+                                    <td>{$item.Compay_abbreviation}</td>
+                                    <td>{$item.RD_Department_name}</td>
+                                    <td style="text-align: center">
+                                        <a href="javascript:;" class="edit" onclick="edit({$item.id})">编辑</a>
+                                        <a href="javascript:;" class="edit" onclick="del({$item.id})">删除</a></td>
+                                </tr>
+                                {/volist}
+
+                                </tbody>
+                            </table>
+                            <span>选择要导出的制度名称</span>
+                            <select name="hy" id="hy">
+                                <option value="制造业">制造业</option>
+                                <option value="研发型">研发型</option>
+                                <option value="软件业">软件业</option>
+                            </select>
+                            <select name="yyzd" id="yyzd">
+                                {volist name='yyzd' id='val'}
+                                <option value="{$val.title}">{$val.title}</option>
+                                {/volist}
+                            </select>
+                            <button onclick="dcWord('pdf');"> {:__('导出PDF')}</button>
+                            <button onclick="dcWord('word');"> {:__('导出Word')}</button>
+
+
+                        </div>
+                        <?php }else{ ?>
+                        <div class="row" style="text-align: center">
+                            <a href="{:url('index/cms.diyform/index?diyname=Research_system')}"><i class="fa fa-pencil fa-fw"></i> {:__('添加信息')}</a>
+                        </div>
+                        <?php } ?>
+                        <hr>
+                        {$data->render()}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function edit(id) {
+        var url = "{:url('index/cms.diyform/index?diyname=Research_system')}";
+        url += '?id='+id;
+        window.location.href=url;
+    }
+
+    function del(id) {
+        //询问框
+        layer.confirm('是否删除该条记录？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var ids = new Array();
+            ids.push(id);
+            ids = ids.join(',');
+            $.ajax({
+                url:"{:url('index/cms.rdsystem/delete')}",
+                type:'post',
+                data : {id:ids,diyname:'Research_system'},
+                success : function(data){
+                    if(data.code==1){
+                        layer.msg(data.msg,{time: 500});
+                        location.reload();
+                    }else{
+                        layer.msg('删除失败',{time: 500});
+                    }
+                }
+            });
+        }, function(){
+            //
+        });
+    }
+
+
+    function dcWord(dc){
+        let type = $("#yyzd").val();
+        let category = $("#yyzd").val();
+        location.href="/index/cms.rdsystem/dcphpword?dctype="+dc+"&type="+type+'&category='+category;
+    }
+</script>

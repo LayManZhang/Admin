@@ -24555,3 +24555,51 @@ class MYPDF extends TCPDF
 
 
 }
+
+class ZDPDF extends TCPDF
+{
+    //Page header
+//    public function Header() {
+//        // Logo
+//        //$image_file = K_PATH_IMAGES.'logo_example.jpg';
+//        //$this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+//        $bMargin = $this->getBreakMargin();
+//        // get current auto-page-break mode
+//        $auto_page_break = $this->AutoPageBreak;
+//        // disable auto-page-break 设置图片水印
+//        $this->SetAutoPageBreak(false, 0);
+//        // set bacground image
+//        $img_file = ROOT_PATH . 'public/assets/img/qrcode.png';
+//        $this->setAlpha('0.1');
+//        $this->Image($img_file, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+//        $this->setAlpha('2');
+//        // restore auto-page-break status
+//        $this->SetAutoPageBreak($auto_page_break, $bMargin);
+//        // set the starting point for the page content
+//        $this->setPageMark();
+//        // Set font
+//        $this->SetFont('droidsansfallback', 'B', 10);
+//        // Title
+////        $this->Image($img_file, 20, 0, '', '9', '', '', '', false, 300, '', false, false, 0);
+////        $this->setAlpha('2');
+////        $this->Cell(0, 15, 'LOGO', 0, false, 'L', 0, '', 0, false, 'M', 'M');
+////        $this->Cell(0, 15, '研发投入核算管理制度', 0, false, 'R', 0, '', 0, false, 'M', 'M');
+//        $head = '<div style="border-bottom:1px solid #000;position: absolute;">
+//            <img src="public/assets/img/qrcode.png">
+//            <span>研发投入核算管理制度</span>
+//</div>';
+//       // $this->writeHTML($head, true, false, true, false, 'R');
+//    }
+
+    // Page footer
+    public function Footer() {
+        // Position at 15 mm from bottom
+        $this->SetY(-15);
+        // Set font
+        $this->SetFont('droidsansfallback', 'I', 8);
+        // Page number
+        $this->Cell(0, 10, $this->getAliasNumPage(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+    }
+
+
+}

@@ -35,7 +35,7 @@ class Channel extends Backend
         $this->model = new \app\admin\model\cms\Channel;
 
         $tree = Tree::instance();
-        $tree->init(collection($this->model->order('weigh desc,id desc')->select())->toArray(), 'parent_id');
+        $tree->init(collection($this->model->order('weigh asc,id desc')->select())->toArray(), 'parent_id');
         $this->channelList = $tree->getTreeList($tree->getTreeArray(0), 'name');
         $this->modelList = \app\admin\model\cms\Modelx::order('id asc')->select();
 

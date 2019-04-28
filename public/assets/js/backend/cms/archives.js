@@ -71,7 +71,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                             field: 'model_id', title: __('Model'), visible: false, align: 'left', addclass:"selectpage", extend:"data-source='cms/modelx/index' data-field='name'"
                         },
                         {
-                            field: 'title', title: __('Title'), align: 'left', formatter: function (value, row, index) {
+                            field: 'title', title: __('Title'), align: 'left',
+                            formatter: function (value, row, index) {
                                 return '<div class="tdtitle"><a href="' + row.url + '" target="_blank">' + value + '</a></div>' + Table.api.formatter.flag.call(this, row['flag'], row, index);
                             }
                         },
