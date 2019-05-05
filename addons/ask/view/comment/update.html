@@ -1,0 +1,15 @@
+<form id="update-comment" class="p-3" role="form" method="POST">
+    {:token()}
+    <input type="hidden" name="id" value="{$__comment__.id}">
+
+    <div class="form-group">
+        <div class="">
+            <textarea id="c-content" name="content" rows="15" class="form-control" placeholder="">{$__comment__.content}</textarea>
+        </div>
+    </div>
+    <div class="form-group mb-0">
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-embossed">提交保存</button>
+        </div>
+    </div>
+</form>

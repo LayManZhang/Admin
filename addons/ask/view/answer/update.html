@@ -1,0 +1,25 @@
+<form id="update-answer" class="p-3" role="form" method="POST">
+    {:token()}
+    <input type="hidden" name="id" value="{$__answer__.id}">
+
+    <div class="form-group">
+        <div class="">
+            <textarea id="c-content" name="content" rows="10" class="form-control" placeholder="请详细描述你的问题，清晰明了的问题才能更好的让小伙伴准备回答">{$__answer__.content}</textarea>
+        </div>
+    </div>
+    {if $isAdmin}
+    <div class="form-group">
+        <label for="c-price" class="control-label">付费偷看金额</label>
+        <div class="">
+            <input id="c-price" placeholder="付费偷看金额" class="form-control" name="price" type="number" value="{$__answer__.price|default='0'}">
+        </div>
+    </div>
+    {else /}
+    {include file="common/markdowntips" /}
+    {/if}
+    <div class="form-group mb-0">
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-embossed">提交保存</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,34 @@
+<section class="question-list-item">
+    <div class="qa-rank">
+        <div class="answers {:$question.answers?'answered':''} {:$question.best_answer_id?'solved':''}">
+            {$question.answers}
+            <small> {:$question.best_answer_id?'解决':'回答'}</small>
+        </div>
+        <div class="views hidden-xs">
+            {$question.views_format}
+            <small>浏览</small>
+        </div>
+    </div>
+    <div class="summary">
+        <ul class="author list-inline">
+            <li>
+                <a href="{$question.user.url}" data-toggle="popover" data-title="{$question.user.nickname}" data-type="user" data-id="{$question.user_id}">{$question.user.nickname}</a>
+                <span class="split"></span>
+                <span class="askDate">{$question.create_date}</span>
+            </li>
+        </ul>
+        <h2 class="title">
+            <a href="{$question.url}">
+                {if $question.price>0}
+                <span class="price-tag" data-toggle="tooltip" data-title="如果回答被采纳，回答者将获得{$question.price}元">￥{$question.price}</span>
+                {/if}
+                {$question.title}
+            </a>
+        </h2>
+        <div class="tags">
+            {foreach name="question.tags" id="tag"}
+            <a href="{$tag.url}" class="tag">{if $tag.icon}<img src="{$tag.icon}" alt="">{/if}{$tag.name}</a>
+            {/foreach}
+        </div>
+    </div>
+</section>

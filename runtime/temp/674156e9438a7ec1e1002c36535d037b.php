@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:69:"E:\fadmin\public/../application/index\view\cms\rdsystem\research.html";i:1555400590;s:52:"E:\fadmin\application\index\view\layout\default.html";i:1554877745;s:49:"E:\fadmin\application\index\view\common\meta.html";i:1547349021;s:52:"E:\fadmin\application\index\view\common\sidenav.html";i:1553668112;s:51:"E:\fadmin\application\index\view\common\script.html";i:1547349021;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:69:"E:\fadmin\public/../application/index\view\cms\rdsystem\research.html";i:1555575416;s:52:"E:\fadmin\application\index\view\layout\default.html";i:1554877745;s:49:"E:\fadmin\application\index\view\common\meta.html";i:1547349021;s:52:"E:\fadmin\application\index\view\common\sidenav.html";i:1553668112;s:51:"E:\fadmin\application\index\view\common\script.html";i:1547349021;}*/ ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -232,26 +232,22 @@
         //执行实例
         var uploadInst = upload.render({
             elem: '#btn-import-file' //绑定元素
-            ,url: "<?php echo url('admin/ajax/upload'); ?>" //上传接口
+            ,url: "<?php echo url('index/cms.rdsystem/import'); ?>" //上传接口
             ,accept: 'file' //允许上传的文件类型
             ,exts: 'csv|xls|xlsx'
-            ,data: {}
+            ,data: {diyname:'Research'}
             ,done: function(res){
-                $.ajax(
-                    {
-                        type: "post",
-                        url: "<?php echo url('index/cms.rdsystem/import'); ?>",
-                        data: {file:res.data.url,diyname:'Research'},
-                        success: function (data) {
-                            if(data.code==1){
-                                layer.msg('导入成功',{time:1000, end: function () {
-                                        location.reload();
-                                    }
-                                });
-                            }
-
+                if(res.code==1){
+                    layer.msg('导入成功',{time:1000, end: function () {
+                            location.reload();
                         }
                     });
+                }else{
+                    layer.msg('导入失败',{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }
                 //上传完毕回调
             }
             ,error: function(){
@@ -271,7 +267,7 @@
         //执行实例
         var uploadInst = upload.render({
             elem: '#btn-import-files' //绑定元素
-            ,url: "<?php echo url('admin/ajax/upload'); ?>" //上传接口
+            ,url: "<?php echo url('index/cms.rdsystem/importAll'); ?>" //上传接口
             ,accept: 'file' //允许上传的文件类型
             ,exts: 'csv|xls|xlsx'
             ,data: {}
@@ -279,22 +275,18 @@
                 var index = layer.load(1, {
                     shade: [0.1,'#fff'], //0.1透明度的白色背景
                 });
-                $.ajax(
-                    {
-                        type: "post",
-                        url: "<?php echo url('index/cms.rdsystem/importAll'); ?>",
-                        data: {file:res.data.url,diyname:'Research'},
-                        success: function (data) {
-                            layer.close(index);
-                            if(data.code==1){
-                                layer.msg('导入成功',{time:1000, end: function () {
-                                        location.reload();
-                                    }
-                                });
-                            }
-
+                layer.close(index);
+                if(res.code==1){
+                    layer.msg(res.msg,{time:1000, end: function () {
+                            location.reload();
                         }
                     });
+                }else{
+                    layer.msg(res.msg,{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }
                 //上传完毕回调
             }
             ,error: function(){

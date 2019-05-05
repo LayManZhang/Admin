@@ -25,7 +25,10 @@
         "karsonzhang/fastadmin-addons": "~1.1.4",
         "overtrue/pinyin": "~3.0",
         "phpoffice/phpexcel": "^1.8",
-        "tecnickcom/tcpdf": "^6.2"
+        "tecnickcom/tcpdf": "^6.2",
+        "phpoffice/phpword": "^0.16.0",
+        "dompdf/dompdf": "^0.8.3",
+        "mpdf/mpdf": "^8.0"
     },
     "config": {
         "preferred-install": "dist"

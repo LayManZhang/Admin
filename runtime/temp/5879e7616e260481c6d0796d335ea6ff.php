@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:70:"E:\fadmin\public/../application/index\view\cms\rdsystem\reporting.html";i:1555402935;s:52:"E:\fadmin\application\index\view\layout\default.html";i:1554877745;s:49:"E:\fadmin\application\index\view\common\meta.html";i:1547349021;s:52:"E:\fadmin\application\index\view\common\sidenav.html";i:1553668112;s:51:"E:\fadmin\application\index\view\common\script.html";i:1547349021;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:70:"E:\fadmin\public/../application/index\view\cms\rdsystem\reporting.html";i:1555572090;s:52:"E:\fadmin\application\index\view\layout\default.html";i:1554877745;s:49:"E:\fadmin\application\index\view\common\meta.html";i:1547349021;s:52:"E:\fadmin\application\index\view\common\sidenav.html";i:1553668112;s:51:"E:\fadmin\application\index\view\common\script.html";i:1547349021;}*/ ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -110,12 +110,62 @@
             var year = $(this).val();
             location.href = "/index/cms.rdsystem/reporting?year=" + year;
         });
+        datalength = $("input[name=btSelectItem]").length;
     });
+
+    var item = 0;
+    var count = new Array();
+    function btSelectAll(){
+        var itemArr = $("input[name=btSelectItem]");
+        if($("input[name=btSelectAll]").is(':checked')) {
+            item = datalength;
+            $("input[name=btSelectItem]").prop('checked',true);
+            count = [];
+            $.each(itemArr,function (i,d) {
+                count.push(parseFloat($(this).attr('val')));
+            })
+        }else{
+            $("input[name=btSelectItem]").prop('checked',false);
+            item = 0;
+            count=[];
+        }
+    };
+
+
+    function btSelectItem(index){
+        if($("#btSelectItem"+index).is(':checked')==true) {
+            count.push(index);
+            item++;
+        }else{
+            var k = count.indexOf(index);
+            if (k > -1) {
+                count.splice(k, 1);
+            }
+            item--;
+        }
+        if(item==datalength){
+            $("input[name=btSelectAll]").prop('checked',true);
+        }else{
+            $("input[name=btSelectAll]").prop('checked',false);
+        }
+    }
+
+    //单项目辅助账批量导出
+    function ExportPl(){
+        if(count.length==0){
+            layer.msg('未选择项目',{time:1000});
+            return false;
+        }else{
+            var ids = count.join(',');
+        }
+        let year = $("#Selectyear").val();
+        location.href="/index/cms.rdsystem/ExportExcel?id="+ids+"&year="+year;
+    }
 
     //单项目辅助账导出
     function Export(e){
-            let year = $("#Selectyear").val();
-            location.href="/index/cms.rdsystem/ExportExcel?id="+e+"&year="+year;
+        let year = $("#Selectyear").val();
+        location.href="/index/cms.rdsystem/ExportExcel?id="+e+"&year="+year;
     }
     //辅助账汇总导出
     function ExportHz(){
@@ -191,6 +241,7 @@
                                 <a href="javascript:;" class="btn btn-success btn-export" title="<?php echo __('导出'); ?>" id="btn-export--all" onclick="ExportAll();"><i class="fa fa-download"></i> <?php echo __('研发费用结构明细表导出'); ?></a>
                                 <a href="javascript:;" class="btn btn-success btn-export" title="<?php echo __('汇总导出'); ?>" id="btn-export-file-hz" onclick="ExportHz();"><i class="fa fa-download"></i> <?php echo __('辅助账汇总导出'); ?></a>
                                 <a href="javascript:;" class="btn btn-success btn-export" title="<?php echo __('导出'); ?>" id="btn-export-file-hgj" onclick="ExportGj();"><i class="fa fa-download"></i> <?php echo __('费用归集导出'); ?></a>
+                                <a href="javascript:;" class="btn btn-success btn-export" title="<?php echo __('导出'); ?>" id="btn-export-filearr" onclick="ExportPl();"><i class="fa fa-download"></i> <?php echo __('支出辅助账导出'); ?></a>
                             </fieldset>
                         </form>
                         <?php if(!empty($items)){ ?>
@@ -198,6 +249,7 @@
                             <table class="table table-bordered table-hover" lay-even lay-skin="nob">
                                 <thead>
                                 <tr>
+                                    <th style="width: 30px;"><input type="checkbox" class="btnSelectAll" name="btSelectAll"  onclick="btSelectAll();"></th>
                                     <th>项目编号</th>
                                     <th>研发项目名称</th>
                                     <th>项目起始日期</th>
@@ -208,6 +260,7 @@
                                 <tbody>
                                 <?php if(is_array($items) || $items instanceof \think\Collection || $items instanceof \think\Paginator): $i = 0; $__LIST__ = $items;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
                                 <tr>
+                                    <td><input type="checkbox" class="btnSelectItem" id="btSelectItem<?php echo $item['id']; ?>" name="btSelectItem" val="<?php echo $item['id']; ?>" onclick="btSelectItem(<?php echo $item['id']; ?>);"></td>
                                     <th><?php echo $item['project_number']; ?></th>
                                     <th><?php echo $item['project_name']; ?></th>
                                     <th><?php echo $item['QH34']; ?></th>

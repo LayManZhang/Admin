@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:54:"E:\fadmin\addons\cms\view\hook\user_sidenav_after.html";i:1555395762;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:54:"E:\fadmin\addons\cms\view\hook\user_sidenav_after.html";i:1556011052;}*/ ?>
 <ul class="list-group">
     <li class="list-group-heading"><?php echo __('内容管理'); ?></li>
     <!--如果需要直接跳转对应的模型(比如我的新闻,我的产品,发布新闻,发布产品)，可以在链接后加上 ?model_id=模型ID -->
@@ -18,5 +18,5 @@
     <li class="list-group-item <?php echo $actionname=='costdetail'?'active':''; ?>"><a href="<?php echo url('index/cms.rdsystem/costdetail'); ?>"><i class="fa fa-tasks fa-fw"></i> <?php echo __('研发费用明细'); ?></a></li>
     <li class="list-group-item <?php echo $actionname=='structlist'?'active':''; ?>"><a href="<?php echo url('index/cms.rdsystem/structlist'); ?>"><i class="fa fa-table fa-fw"></i> <?php echo __('结构明细表'); ?></a></li>
     <li class="list-group-item <?php echo $actionname=='reporting'?'active':''; ?>"><a href="<?php echo url('index/cms.rdsystem/reporting'); ?>"><i class="fa fa-table fa-fw"></i> <?php echo __('报表导出'); ?></a></li>
-
+    <li class="list-group-item <?php echo $actionname=='systemlist'?'active':''; ?>"><a href="<?php echo url('index/cms.rdsystem/systemlist'); ?>"><i class="fa fa-list fa-fw"></i> <?php echo __('高新研发制度'); ?></a></li>
 </ul>

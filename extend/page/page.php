@@ -149,7 +149,8 @@ class Page extends Paginator
     protected function getAvailablePageWrapper($url, $page)
     {
 //        return '<a class="page-number" href="' . htmlentities($url) . '" title="第"'. $page .'"页" >' . $page . '</a>';
-
+        $listRows = $this->listRows();
+        $url = $url.'&limit='.$listRows;
         return ' <li class="page-number"><a href="' . htmlentities($url) . '">' . $page . '</a></li>';
     }
 

@@ -12,6 +12,8 @@
         <meta name="keywords" content="{cms:config name='cms.keywords'/}" />
         <meta name="description" content="{cms:config name='cms.description'/}" />
 
+        <link rel="shortcut icon" href="/assets/img/favicon.ico">
+
         <link rel="stylesheet" media="screen" href="__ADDON__/css/common.css?v={cms:config name='site.version'/}" />
         <link rel="stylesheet" media="screen" href="__ADDON__/css/font-awesome.min.css?v={cms:config name='site.version'/}" />
 
@@ -51,12 +53,12 @@
                             <!--以下是两种实现导航菜单的方法-->
 
                             <!--如果你需要自定义NAV,可使用channellist标签来完成,这里只设置了2级-->
-                            {cms:channellist id="nav" type="top"}
+                            {cms:channellist id="nav" type="top" orderby="weigh" orderway="asc"}
                             <!--判断是否有子级或高亮当前栏目-->
                             <li class="{if $nav.has_child}dropdown{/if} {if $__CHANNEL__&&($__CHANNEL__.id==$nav.id||$__CHANNEL__.parent_id==$nav.id)} active{/if}">
                                 <a href="{$nav.url}"{if $nav.has_child} data-toggle="dropdown"{/if}>{$nav.name}{if $nav.has_child}  <b class="caret"></b>{/if}</a>
                                 <ul class="dropdown-menu" role="menu">
-                                    {cms:channellist id="sub" type="son" typeid="$nav['id']"}
+                                    {cms:channellist id="sub" type="son" typeid="$nav['id']" orderby="weigh" orderway="asc"}
                                     <li><a href="{$sub.url}">{$sub.name}</a></li>
                                     {/cms:channellist}
                                 </ul>

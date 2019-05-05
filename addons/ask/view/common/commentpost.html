@@ -1,0 +1,40 @@
+{if $user}
+    {if $user.score<$config.limitscore.postcomment}
+    <div class="alert alert-warning">
+        <i class="fa fa-info-circle"></i> 积分大于{$config.limitscore.postcomment}才能够发布评论，当前你有{$user.score}积分，
+    </div>
+    {/if}
+{else /}
+    <div class="alert alert-warning">
+        <i class="fa fa-info-circle"></i> 请登录后再发布评论，<a href="{:url('index/user/login')}">点击登录</a>
+    </div>
+{/if}
+<form action="{:addon_url('ask/comment/post')}" method="post" class="postcomment">
+    {:token()}
+    <input type="hidden" name="id" value="{$Think.get.id}"/>
+    <input type="hidden" name="type" value="{$Think.get.type}"/>
+    <input type="hidden" name="reply_user_id" value="0"/>
+    <div class="form-group">
+        <textarea name="content" class="form-control" {if $user.score<$config.limitscore.postanswer}disabled placeholder="请登录后再发表评论"{/if} data-autosave-key="post-comment-{$Think.get.id|default=0}" cols="6" rows="5"></textarea>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group mb-0">
+                {if $user}
+                <input name="submit" type="submit" id="submit" value="提交{:isset($__question__)?'答案':'评论'}(Ctrl+回车)" {if $user.score<$config.limitscore.postcomment}disabled{/if} class="btn btn-primary">
+                {else /}
+                <a href="{:url('index/user/login')}" class="btn btn-primary">登录</a>
+                <a href="{:url('index/user/register')}" class="btn btn-light">注册新账号</a>
+                {/if}
+            </div>
+        </div>
+        <div class="col-xs-6 text-right">
+
+            <div class="checkbox my-1 hidden">
+                <label>
+                    <input name="subscribe" type="checkbox" class="checkbox" tabindex="7" checked="" value="1"> 有人回复时邮件通知我
+                </label>
+            </div>
+        </div>
+    </div>
+</form>

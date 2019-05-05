@@ -1,0 +1,134 @@
+<div class="p-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                <div class="article-section">
+                    <div class="clearfix">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-8 col-md-offset-2">
+                                <div class="mb-3">
+                                    <h3><span>{$title}</span></h3>
+                                </div>
+                                <hr>
+                                {if $user.score<$config.limitscore.postquestion}
+                                <div class="alert alert-warning">
+                                    <i class="fa fa-info-circle"></i> 积分大于{$config.limitscore.postquestion}才能够发布问题，当前你有{$user.score}积分，
+                                </div>
+                                {/if}
+                                <div class="alert alert-warning mt-1" role="alert">
+                                    此处只允许发布提问，发布经验分享请到 <a href="{:addon_url('ask/article/post')}" target="_blank">文章投稿</a> 版块<br>
+                                </div>
+                                <form id="post-question" class="post-form" role="form" method="POST">
+                                    {:token()}
+                                    <input type="hidden" name="price" value="0"/>
+                                    {if $__user__}
+                                    <div class="alert alert-danger">你正在向 <a href="{$__user__.url}" data-toggle="popover" data-title="{$__user__.nickname}" data-placement="right" data-type="user" data-id="{$__user__.id}" target="_blank">{$__user__.nickname}</a> 提问，<span id="invitetips"></span> <a href="javascript:" class="btn btn-danger btn-xs btn-invite-user-pay">付费邀请</a></div>
+                                    <input type="hidden" name="to_user_id" value="{$__user__.id}"/>
+                                    <input type="hidden" name="inviteprice" value="0"/>
+                                    {/if}
+                                    <div class="form-group">
+                                        <label for="c-title" class="control-label">问题分类</label>
+                                        <div class="">
+                                            <select name="category_id" id="category_id" class="form-control" style="height:40px;line-height:40px;">
+                                                <option value="0">请选择分类</option>
+                                            {foreach name="categoryList" id="item"}
+                                                <option value="{$item.id}" {:$categoryId==$item.id?'selected':''}>{$item.name}</option>
+                                            {/foreach}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="c-title" class="control-label">问题标题</label>
+                                        <div class="">
+                                            <input id="c-title" placeholder="请输入问题的标题，并以问号结尾" class="form-control" name="title" type="text" data-type="post" data-header="headertpl" value="{$__question__.title|default=''}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="c-tags" class="control-label">问题标签<em>(最多输入3个，空格或回车确认添加)</em></label>
+                                        <div class="">
+                                            <input id="c-tags" class="form-control" name="tags" type="text" placeholder="" style="height:42px;line-height:42px;" value="{:$__question__?$__question__.tags_text:($__tag__?$__tag__.name:'')}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="c-content" class="control-label">问题内容</label>
+                                        <div class="">
+                                            <textarea id="c-content" name="content" rows="10" class="form-control" data-autosave-key="post-question-{$__question__.id|default=0}" placeholder="请详细描述你的问题，清晰明了的问题才能更好的让小伙伴准确回答">{$__question__.content_output|default=''}</textarea>
+                                            <span class="post-question-status pull-right"></span>
+                                        </div>
+                                    </div>
+                                    {include file="common/markdowntips" /}
+
+                                    {if !$__question__}
+                                    <!-- S 悬赏发贴 -->
+                                    <div class="form-group mb-0">
+                                        <label class="control-label ">
+                                            悬赏金额<em>(价值越高越快得到高质量的回答哦)</em>
+                                            <a href="javascript:" data-toggle="popover" data-content="<i class='fa fa-info-circle'></i> 温馨提示<br>1、悬赏金额将在提问者采纳最佳答案后增加到最佳回答者账户余额<br>2、如果 {$config.adoptdays} 天内没有任何回答者，悬赏金额将返回到提问者余额<br>3、如果提问者在 {$config.adoptdays} 天内仍未采纳最佳答案，将由平台管理员选定最佳答案">
+                                                <span class="ml-1 text-primary small"><i class="fa fa-question-circle"></i> 悬赏规则</span>
+                                            </a>
+                                        </label>
+                                        <div class="">
+                                            <div class="row row-recharge row-price">
+                                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                                    <label class="active" data-type="fixed" data-value="0">
+                                                        无 </label>
+                                                </div>
+                                                {foreach name="config.pricelist" id="price"}
+                                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                                    <label data-type="fixed" data-value="{$price}">{$key}</label>
+                                                </div>
+                                                {/foreach}
+                                                {if $config.iscustomprice}
+                                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                                    <label data-type="custom" data-value="">
+                                                        其它金额
+                                                    </label>
+                                                </div>
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- E 悬赏发贴 -->
+
+                                    {if $config.isanonymous}
+                                    <!-- S 匿名提问 -->
+                                    <div class="form-group mb-0">
+                                        <div class="" style="margin-left:20px;">
+                                            <label class="checkbox" style="font-weight:400;">
+                                                <input type="checkbox" id="c-isanonymous" name="isanonymous" value="1" {:$__question__&&$__question__.isanonymous?'checked':''}>匿名提问
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- E 匿名提问 -->
+                                    {/if}
+                                    {/if}
+                                    <div class="form-group mb-2" style="margin-bottom:0">
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary btn-lg btn-embossed">提交问题</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--搜索模板-->
+<script type="text/html" id="headertpl">
+    <div class="px-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert mb-0" style="border-radius: 0;color: #0084ff; background: rgba(0, 132, 255, 0.1);">
+                    你可以先看看以下问题是否能帮到你:
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script data-render="script" src="__ADDON__/js/post.js?v={$site.version}"></script>

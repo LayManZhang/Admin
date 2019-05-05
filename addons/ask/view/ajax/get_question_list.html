@@ -1,0 +1,9 @@
+{__NOLAYOUT__}
+
+{foreach name="questionList" id="question"}
+{include file="common/questionitem" /}
+{/foreach}
+
+<div class="pager text-center">
+    {$questionList->render()}
+</div>

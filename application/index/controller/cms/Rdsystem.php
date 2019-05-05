@@ -9,9 +9,6 @@
 namespace app\index\controller\cms;
 
 use app\common\controller\Frontend;
-use Mpdf\Mpdf;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
 use think\Db;
 use addons\cms\model\Diyform as DiyformModel;
@@ -20,7 +17,7 @@ use think\Exception;
 class Rdsystem extends Frontend
 {
     protected $layout = 'default';
-    protected $noNeedLogin = [];
+    protected $noNeedLogin = ['dcpdf'];
     protected $noNeedRight = ['*'];
 
 
@@ -2467,7 +2464,7 @@ class Rdsystem extends Frontend
         $type = $this->request->param('type');
         $category = $this->request->param('category');
 
-        $hash = Db::name('cms_userwords')->where(['type'=>$type,'category'=>$category])->find();
+        $hash = Db::name('cms_userwords')->where(['type'=>$type,'category'=>$category,'user_id'=>$this->auth->id])->find();
 
         $dateArr = [
             1=>['title'=>'研究开发组织管理制度','key'=>'Date_management'],
@@ -2495,12 +2492,14 @@ class Rdsystem extends Frontend
 
         if($hash){
             //如果不是最新生成的word，删除原本的word生成最新的word文档
+            $id = $hash['id'];
             if($hash['is_new']==0){
+
                 unlink($hash['file_path'].DS.$hash['file_name']);
 
                 $company = Db::name('research_system')->where('user_id',$this->auth->id)->find();
                 $title = $category;
-                $bzrqs = $dateArr[$category];
+                $bzrqs = $company[$dateArr[$category]];
                 $bzrq = date('Y年m月d日',strtotime($bzrqs));
                 $sxrq = date('Y年m月01日',strtotime('+1 month',strtotime($bzrqs)));
                 $img_url = 'http://'.$_SERVER['HTTP_HOST'].$company['Company_logo'];
@@ -2510,13 +2509,19 @@ class Rdsystem extends Frontend
                 $templateProcessor->setValue('title', $title);
                 $templateProcessor->setValue('bzrq', $bzrq);
                 $templateProcessor->setValue('sxrq', $sxrq);
-                $templateProcessor->setImageValue('image', ['path'=>$img_url,'height'=>'40','width'=>'60']);
+                if(!empty($company['Company_logo'])){
+                    $templateProcessor->setImageValue('image', ['path'=>$img_url,'width'=>'80','height'=>'40']);
+                }else{
+                    $templateProcessor->setValue('image', '');
+                }
 
                 $file_url = ROOT_PATH.'public'.DS.'doc/user'.$this->auth->id;
-                $file_name = date('YmdHis').'.docx';
+                $file_name = uniqid().'.docx';
                 if(!file_exists($file_url)){
-                    mkdir($file_url);
-                    chmod($file_url,777);
+                    mkdir($file_url,0777,true);
+                    chmod($file_url,0777);
+                }else{
+                    chmod($file_url,0777);
                 }
                 $templateProcessor->saveAs($file_url.DS.$file_name);
                 Db::name('cms_userwords')->where(['type'=>$type,'category'=>$title])->update(['file_path'=>$file_url,'file_name'=>$file_name,'is_new'=>1]);
@@ -2524,7 +2529,10 @@ class Rdsystem extends Frontend
                 if($dctype=='word'){
                     $this->download($hash['file_path'].DS.$hash['file_name']);
                 }else if($dctype=='pdf'){
-                    $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'doc/user'.$this->auth->id.DS.$hash['file_name'];
+                    $token = uniqid();
+                    cache('dctoken',$token);
+//                    $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'doc/user'.$this->auth->id.DS.$hash['file_name'];
+                    $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'index/cms.rdsystem/dcpdf?id='.$id.'&token='.$token;
                     $url = urlencode($url);
                     $word2pdf = 'http://ow365.cn/?i=18439&info=2&furl='.$url;
                     header("location:".$word2pdf);
@@ -2536,9 +2544,10 @@ class Rdsystem extends Frontend
             $company = Db::name('research_system')->where('user_id',$this->auth->id)->find();
 
             $title = $category;
-            $bzrqs = $dateArr[$category];
+            $bzrqs = $company[$dateArr[$category]];
             $bzrq = date('Y年m月d日',strtotime($bzrqs));
             $sxrq = date('Y年m月01日',strtotime('+1 month',strtotime($bzrqs)));
+
             $img_url = 'http://'.$_SERVER['HTTP_HOST'].$company['Company_logo'];
 
             $templateProcessor = new TemplateProcessor('doc/'.$title.'.docx');
@@ -2546,13 +2555,19 @@ class Rdsystem extends Frontend
             $templateProcessor->setValue('title', $title);
             $templateProcessor->setValue('bzrq', $bzrq);
             $templateProcessor->setValue('sxrq', $sxrq);
-            $templateProcessor->setImageValue('image', ['path'=>$img_url,'height'=>'40','width'=>'60']);
+            if(!empty($company['Company_logo'])){
+                $templateProcessor->setImageValue('image', ['path'=>$img_url,'width'=>'80','height'=>'40']);
+            }else{
+                $templateProcessor->setValue('image', '');
+            }
 
-            $file_url = ROOT_PATH.'public'.DS.'doc/user'.$this->auth->id;
-            $file_name = date('YmdHis').'.docx';
+            $file_url = 'doc/user'.$this->auth->id;
+            $file_name = uniqid().'.docx';
             if(!file_exists($file_url)){
-                mkdir($file_url);
-                chmod($file_url,777);
+                    mkdir($file_url,0777,true);
+                    chmod($file_url,0777);
+            }else{
+                    chmod($file_url,0777);
             }
             $templateProcessor->saveAs($file_url.DS.$file_name);
 
@@ -2566,21 +2581,24 @@ class Rdsystem extends Frontend
                 'create_time'=>time(),
                 'update_time'=>time()
             ];
-            Db::name('cms_userwords')->insert($data);
+            $id = Db::name('cms_userwords')->insertGetId($data);
         }
 
         //下载文件
         if($dctype=='word'){
-            $this->download($file_url.DS.$file_name);
+            $this->download(ROOT_PATH.'public'.DS.$file_url.DS.$file_name);
         }else if($dctype=='pdf'){
-            $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'doc/user'.$this->auth->id.DS.$hash['file_name'];
+            $token = uniqid();
+            cache('dctoken',$token);
+//            $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'doc/user'.$this->auth->id.DS.$hash['file_name'];
+            $url = 'http://'.$_SERVER['HTTP_HOST'].DS.'index/cms.rdsystem/dcpdf?id='.$id.'&token='.$token;
             $url = urlencode($url);
             $word2pdf = 'http://ow365.cn/?i=18439&info=2&furl='.$url;
             header("location:".$word2pdf);
+
         }
 
     }
-
     /**
      * 导出制度PDF
      * @throws \think\db\exception\DataNotFoundException
@@ -2589,61 +2607,27 @@ class Rdsystem extends Frontend
      */
 
     public function dcpdf(){
-        $type = $this->request->param('type');
-        $category = $this->request->param('category');
-    }
+        $id = $this->request->param('id');
+        $token = $this->request->param('token');
+//        return 'dctoken='.Session::get('dctoken');exit;
+        if(empty($id)){
+            $this->error("参数错误！");
+        }
+        if(cache('dctoken')!=$token){
+            $this->error("非法请求！");
+        }
 
+        $file = Db::name('cms_userwords')->where('id',$id)
+//            ->where('user_id',$this->auth->id)
+            ->find();
 
-
-    function word2pdf()
-    {
-        return urlencode('http://z.zhongkechuang.net/doc/研究开发组织管理制度.docx');exit;
-//        Settings::setPdfRendererName(Settings::PDF_RENDERER_TCPDF);
-//        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
-        Settings::setPdfRendererName(Settings::PDF_RENDERER_MPDF);
-
-//        Settings::setPdfRendererPath(VENDOR_PATH.'tecnickcom/tcpdf');
-//        Settings::setPdfRendererPath(VENDOR_PATH.'dompdf/dompdf');
-        Settings::setPdfRendererPath(VENDOR_PATH.'mpdf/mpdf');
-
-        $phpWord = IOFactory::load('./doc/研究开发组织管理制度.docx', 'Word2007');
-        $pdf = IOFactory::createWriter($phpWord,'PDF');
-
-        $pdf->save('doc/'.time().'mpdf.pdf', 'PDF',true);
+        if(empty($file)){
+            $this->error("文件不存在！");
+        }
+        cache('dctoen',uniqid());
+        $this->download(ROOT_PATH.'public'.DS.$file['file_path'].DS.$file['file_name']);
 
     }
 
-
-    public function pdf2pdf(){
-         $dashboard_pdf_file = ROOT_PATH.'public/doc/1556263772tt_201904261603471_20190426160559.pdf';
-        $company = Db::name('research_system')->where('user_id',$this->auth->id)->find();
-         $pdf = new mPDF();
-//         $pdf->SetImportUse();
-
-//         $pagecount = $pdf->SetSourceFile($dashboard_pdf_file);
-//         for($i= 1; $i<= $pagecount; $i++){
-//            $import_page = $pdf->ImportPage($i);
-//            $pdf->UseTemplate($import_page);
-//             if($i< $pagecount)
-//             $pdf->AddPage();
-//        }
-//         $file = 'doc/'.time().'tt.pdf';
-//        $pdf->Output($file,'F');
-//         unset($pdf);
-
-//        $pdf = new mPDF();
-
-        $pdf->percentSubset = 0;
-        $search = array(
-            'Bzrq',
-        );
-
-        $replacement = array(
-            "20190901"
-        );
-
-        $pdf->OverWrite('doc/1556266164tt.pdf', $search, $replacement, 'I', 'mpdf.pdf' ) ;
-//
-    }
 
 }

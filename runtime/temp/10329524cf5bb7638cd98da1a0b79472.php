@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:68:"E:\fadmin\public/../application/index\view\cms\rdsystem\project.html";i:1555396672;s:52:"E:\fadmin\application\index\view\layout\default.html";i:1554877745;s:49:"E:\fadmin\application\index\view\common\meta.html";i:1547349021;s:52:"E:\fadmin\application\index\view\common\sidenav.html";i:1553668112;s:51:"E:\fadmin\application\index\view\common\script.html";i:1547349021;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:68:"E:\fadmin\public/../application/index\view\cms\rdsystem\project.html";i:1555575550;s:52:"E:\fadmin\application\index\view\layout\default.html";i:1554877745;s:49:"E:\fadmin\application\index\view\common\meta.html";i:1547349021;s:52:"E:\fadmin\application\index\view\common\sidenav.html";i:1553668112;s:51:"E:\fadmin\application\index\view\common\script.html";i:1547349021;}*/ ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -244,23 +244,21 @@
         //执行实例
         var uploadInst = upload.render({
             elem: '#btn-import-file' //绑定元素
-            ,url: "<?php echo url('admin/ajax/upload'); ?>" //上传接口
+            ,url: "<?php echo url('index/cms.rdsystem/import'); ?>" //上传接口
             ,accept: 'file' //允许上传的文件类型
             ,data: {diyname:'Project'}
             ,done: function(res){
-                $.ajax(
-                    {
-                        type: "post",
-                        url: "<?php echo url('index/cms.rdsystem/import'); ?>",
-                        data: {file:res.data.url,diyname:'Project'},
-                        success: function (data) {
-                            var router = layui.router();
-                            var page = router.search.page;//弹出提示 “1”
-
-
+                if(res.code==1){
+                    layer.msg('导入成功',{time:1000, end: function () {
                             location.reload();
                         }
                     });
+                }else{
+                    layer.msg('导入失败',{time:1000, end: function () {
+                            location.reload();
+                        }
+                    });
+                }
                 //上传完毕回调
             }
             ,error: function(){
