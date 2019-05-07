@@ -7,7 +7,6 @@ return array (
     'response_send' => 
     array (
       0 => 'ask',
-      1 => 'loginvideo',
     ),
     'user_register_successed' => 
     array (
@@ -20,6 +19,10 @@ return array (
     'user_sidenav_after' => 
     array (
       0 => 'cms',
+    ),
+    'config_init' => 
+    array (
+      0 => 'nkeditor',
     ),
   ),
   'route' => 

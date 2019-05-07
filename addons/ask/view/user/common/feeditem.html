@@ -14,9 +14,11 @@
                 {/if}
                 {if $feed['action']=='post_question'}
                 发布了问题
-                {elseif $feed['action']=='post_comment'}
+                {elseif $feed['action']=='post_article' /}
+                发表了文章
+                {elseif $feed['action']=='post_comment' /}
                 发表了评论
-                {elseif $feed['action']=='post_answer'}
+                {elseif $feed['action']=='post_answer' /}
                 对问题发布了答案
                 {elseif $feed['action']=='adopt' /}
                 采纳了的最佳答案

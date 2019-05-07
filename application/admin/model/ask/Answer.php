@@ -66,7 +66,7 @@ class Answer extends Model
 
         self::afterUpdate(function ($row) use ($config) {
             $changedData = $row->getChangedData();
-            if (is_null($changedData['deletetime'])) {
+            if (isset($changedData['deletetime']) && is_null($changedData['deletetime'])) {
                 $model = Service::getModelByType('question', $row['question_id']);
                 if ($model) {
                     try {

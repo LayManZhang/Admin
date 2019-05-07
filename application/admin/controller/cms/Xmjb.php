@@ -124,7 +124,7 @@ class Xmjb extends Backend
         if(isset($id)&&!empty($id)&&$id!==0){  //id查询时，用于编辑时展示数据库数据
             $where['id'] = $post['searchValue'];
         }else if(isset($name)&&!empty($name)){//名称查询时，默认返回一二级项目级别
-            $where['grade_type']= ['IN',[1,2]];
+            $where['grade_type']= ['IN',[1,2,3]];
             foreach ($name as $k=>$v){
                 $where['grade_name'] = ['LIKE','%'.$v.'%'];
             }
@@ -138,15 +138,19 @@ class Xmjb extends Backend
 
         $list = $this->model
             ->where($where)
-            ->field(['id', 'grade_name as name','grade_type as type'])
+            ->field(['id', 'grade_fname as name','grade_type as type'])
             ->order('grade_type', 'asc')
             ->limit($offset, $limit)
             ->select();
         $result = array("total" => $total, "rows" => $list);
 
         return json($result);
+    }
 
-
+    public function get_type(){
+        $id = $this->request->param('id');
+        $res = $this->model->where('id',$id)->find();
+        return json($res);
     }
 
 }

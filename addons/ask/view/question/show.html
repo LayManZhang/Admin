@@ -63,7 +63,7 @@
                     <span class="question-price-tag" data-toggle="tooltip" data-title="如果回答被采纳，回答者将获得{$__question__.price}元">￥{$__question__.price}</span>
                     {/if}
 
-                    {$__question__.title}
+                    <span style="{$__question__.style_text}">{$__question__.title}</span>
                     {if $__question__.price>0 && !$__question__.best_answer_id}
                     {if !$__question__.is_reward_expired}
                     <span class="countdown" data-seconds="{$__question__.reward_remain_seconds}" data-toggle="tooltip" data-title="超时将无法采纳最佳答案，没有答案将返还悬赏金额给提问者">
@@ -131,6 +131,8 @@
                     {else /}
                     <a href="{:addon_url('ask/question/open',[],false)}/id/{$__question__.id}" class="action btn-open" data-id="{$__question__.id}" data-type="question" data-toggle="tooltip" data-title="开启"><i class="fa fa-check"></i> 开启</a>
                     {/if}
+
+                    <a href="{:addon_url('ask/question/config',[],false)}/id/{$__question__.id}" class="action btn-config" data-id="{$__question__.id}" data-type="question" data-toggle="tooltip" data-title="更多设置"><i class="fa fa-cog"></i> 更多</a>
                 {/if}
                 </span>
             </div>
@@ -409,4 +411,5 @@
     </div>
 </script>
 
+<script data-render="script" src="__ADDON__/js/jquery.colorpicker.min.js?v={$site.version}"></script>
 <script data-render="script" src="__ADDON__/js/question.js?v={$site.version}"></script>

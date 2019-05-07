@@ -16,8 +16,8 @@ var options = minimist(process.argv.slice(2), knownOptions);
 //合并css
 gulp.task('css', function () {
     var css = [
-        '﻿../../public/assets/css/bootstrap.min.css',
-        '﻿../../public/assets/libs/font-awesome/css/font-awesome.min.css',
+        '../../public/assets/css/bootstrap.min.css',
+        '../../public/assets/libs/font-awesome/css/font-awesome.min.css',
         'assets/css/swiper.min.css',
         'assets/css/jquery.tagsinput.min.css',
         'assets/css/jquery.autocomplete.min.css',
@@ -35,10 +35,10 @@ gulp.task('css', function () {
 //合并js
 gulp.task('js', function () {
     var js = [
-        '﻿../../public/assets/libs/jquery/dist/jquery.min.js',
-        '﻿../../public/assets/libs/bootstrap/dist/js/bootstrap.min.js',
-        '﻿../../public/assets/libs/fastadmin-layer/dist/layer.js',
-        '﻿../../public/assets/libs/art-template/dist/template-native.js',
+        '../../public/assets/libs/jquery/dist/jquery.min.js',
+        '../../public/assets/libs/bootstrap/dist/js/bootstrap.min.js',
+        '../../public/assets/libs/fastadmin-layer/dist/layer.js',
+        '../../public/assets/libs/art-template/dist/template-native.js',
         'assets/js/taboverride.js',
         'assets/js/bootstrap-markdown.js',
         'assets/js/jquery.pasteupload.js',

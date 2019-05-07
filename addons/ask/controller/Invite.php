@@ -39,11 +39,15 @@ class Invite extends Base
         $email = $this->request->post('email');
         $user_id = $this->request->post('user/d');
         $price = $this->request->post('price/f');
+        $price = max(0, $price);
         $user = null;
         if ($type == 'site') {
             $user = \app\common\model\User::get($user_id);
             if (!$user) {
                 $this->error("未找到邀请的用户");
+            }
+            if ($user->id == $this->auth->id) {
+                $this->error("你不能邀请你自己");
             }
             $email = $user->email;
         } else if ($type == 'qq') {
@@ -58,13 +62,18 @@ class Invite extends Base
         }
 
         $config = get_addon_config('ask');
-        $price = max(0, $price);
         //免费邀请上限
         if (!$price) {
             $count = \addons\ask\model\Invite::where('user_id', $this->auth->id)
                 ->where('price', '0')->whereTime('createtime', 'today')->count();
             if ($count > $config['maxinvitelimit']) {
                 $this->error("每日邀请超过上限");
+            }
+        }
+
+        if ($type == 'site' && $price > 0) {
+            if ($this->auth->money < $price) {
+                $this->error("当前余额不足，无法进行付费邀请");
             }
         }
         $data = [

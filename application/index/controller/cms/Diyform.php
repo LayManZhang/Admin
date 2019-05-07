@@ -281,7 +281,6 @@ class Diyform extends Frontend
 
     //导出评估结果PDF
     public function pdf($data){
-        require_once(VENDOR_PATH.'\tecnickcom\tcpdf\tcpdf.php');
 
         $pdf = new \MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -349,7 +348,7 @@ class Diyform extends Frontend
                                   <td>'.$item['SalesProceeds'].'</td>
                                 </tr>
                                 <tr>
-                                  <td style="text-align: center;width: 150px;">纳税要求:</td>
+                                  <td style=" text-align: center;width: 150px;">纳税要求:</td>
                                   <td>'.$item['Ratal'].'</td>
                                 </tr>
                                 <tr>

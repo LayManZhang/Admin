@@ -15,14 +15,7 @@ class Askdown
     protected $config = [];
     protected $links = [];
     protected $autolinks = [
-        '官网'   => 'https://www.fastadmin.net',
-        '小程序'  => 'https://www.fastadmin.net/wxapp.html',
-        '插件市场' => 'https://www.fastadmin.net/store.html',
-        '下载'   => 'https://www.fastadmin.net/download.html',
-        '捐赠'   => 'https://www.fastadmin.net/store.html',
-        '案例'   => 'https://www.fastadmin.net/case.html',
-        '文档'   => 'https://doc.fastadmin.net/docs/',
-        '演示'   => 'https://www.fastadmin.net/demo.html',
+
     ];
 
     public function __construct()

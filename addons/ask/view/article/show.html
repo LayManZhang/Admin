@@ -32,6 +32,10 @@
         text-decoration: underline;
     }
 
+    .comment-footer .comment-list .media .wysiwyg {
+        margin-bottom: 5px;
+    }
+
     .question-title {
         margin-bottom: 15px;
     }
@@ -66,7 +70,7 @@
                             {if $__article__.price>0}
                             <span class="question-price-tag" data-toggle="tooltip" data-title="此文章需要支付{$__article__.price}元才能查看">￥{$__article__.price}</span>
                             {/if}
-                            {$__article__.title}
+                            <span style="{$__article__.style_text}">{$__article__.title}</span>
                         </h1>
 
                         <div class="question-richtext wysiwyg" itemprop="text">
@@ -103,6 +107,7 @@
                         {if $isAdmin || ($user && $user.id==$__article__.user_id)}
                         <a href="{:addon_url('ask/article/update',[],false)}/id/{$__article__.id}" class="action btn-edit" data-id="{$__article__.id}" data-type="article" data-toggle="tooltip" data-title="编辑更新文章"><i class="fa fa-pencil"></i> 编辑</a>
                         <a href="{:addon_url('ask/article/delete',[],false)}/id/{$__article__.id}" class="action btn-delete" data-id="{$__article__.id}" data-type="article" data-toggle="tooltip" data-title="删除该文章"><i class="fa fa-times"></i> 删除</a>
+                        <a href="{:addon_url('ask/article/config',[],false)}/id/{$__article__.id}" class="action btn-config" data-id="{$__article__.id}" data-type="question" data-toggle="tooltip" data-title="更多设置"><i class="fa fa-cog"></i> 更多</a>
                         {/if}
                         </span>
                     </div>
@@ -213,6 +218,7 @@
     </div>
 </div>
 
+<script data-render="script" src="__ADDON__/js/jquery.colorpicker.min.js?v={$site.version}"></script>
 <script data-render="script">
     $(function () {
         //编辑器

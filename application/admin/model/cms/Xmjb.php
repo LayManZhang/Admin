@@ -25,7 +25,7 @@ class Xmjb extends Model
     
     public function getGradeTypeList()
     {
-        return ['1' => __('一级'),'2' => __('二级'),'3' => __('三级')];
+        return ['1' => __('一级'),'2' => __('二级'),'3' => __('三级'),'4' => __('四级')];
     }     
 
 

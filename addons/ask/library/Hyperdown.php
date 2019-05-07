@@ -246,7 +246,7 @@ class Hyperdown
                     if (trim($attr) != "" && (!isset($tmp[1]) || (trim($tmp[0]) != "" && !in_array(strtolower(trim($tmp[0])), $allowedattr)))) {
 
                     } else {
-                        $newattrs[] = $attr;
+                        $newattrs[] = preg_replace("/&#x[0-9a-z]{2}/i", '', str_replace(['javascript:', ''], '', $attr));
                     }
                 }
                 $attrs = implode(" ", $newattrs);

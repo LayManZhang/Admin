@@ -9,6 +9,7 @@ return [
     'Description'          => '描述',
     'Summary'              => '摘要',
     'Flag'                 => '标志',
+    'Top'                  => '置顶',
     'Image'                => '图片',
     'Content'              => '内容',
     'Content_fmt'          => '富文本内容',

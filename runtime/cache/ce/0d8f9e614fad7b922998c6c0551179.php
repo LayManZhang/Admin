@@ -1,4 +1,0 @@
-<?php
-//000000000000
- exit();?>
-a:10:{s:2:"id";i:3;s:4:"name";s:12:"项目指南";s:5:"table";s:13:"cms_addonxmzn";s:6:"fields";s:291:"State,Objects,Explanation,Reception_time,Materials,Condition,Support,Policy_basis,Procedure,Contents,Introduction,Endtime,Starttime,xmjb,Fields,Mode,Direction,Amount,Keywords,Url,SalesProceeds,Ratal,pro_status,Researchput,Equipmentput,Brandput,Informationization,Condition2,Max_SalesProceeds";s:10:"channeltpl";s:12:"channel.html";s:7:"listtpl";s:14:"list_news.html";s:7:"showtpl";s:14:"show_xmzn.html";s:10:"createtime";i:1552098044;s:10:"updatetime";i:1553754974;s:7:"setting";N;}

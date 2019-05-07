@@ -66,7 +66,7 @@ class Article extends Model
 
         self::afterUpdate(function ($row) use ($config) {
             $changedData = $row->getChangedData();
-            if (is_null($changedData['deletetime'])) {
+            if (isset($changedData['deletetime']) && is_null($changedData['deletetime'])) {
                 User::increase('articles', 1, $row->user_id);
                 $config['score']['postarticle'] && \app\common\model\User::score($config['score']['postarticle'], $row->user_id, '恢复文章');
             }
@@ -79,10 +79,9 @@ class Article extends Model
         return $content;
     }
 
-
     public function getFlagList()
     {
-        return ['index' => __('Index'), 'hot' => __('Hot'), 'recommend' => __('Recommend')];
+        return ['index' => __('Index'), 'hot' => __('Hot'), 'recommend' => __('Recommend'), 'top' => __('Top')];
     }
 
     public function getStatusList()

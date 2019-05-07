@@ -14,9 +14,8 @@ use traits\model\SoftDelete;
 /**
  * 问题模型
  */
-class Question Extends Model
+class Question extends Model
 {
-
     protected $name = "ask_question";
     // 开启自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
@@ -65,7 +64,9 @@ class Question Extends Model
                 $item->delete();
             }
             User::decrease('questions', 1, $row->user_id);
-            User::decrease('unadopted', 1, $row->user_id);
+            if (!$row['best_answer_id']) {
+                User::decrease('unadopted', 1, $row->user_id);
+            }
             //悬赏退回
             if ($row->price > 0 && !$row->best_answer_id) {
                 \app\common\model\User::money($row->price, $row->user_id, '悬赏退回');
@@ -89,12 +90,21 @@ class Question Extends Model
             if (isset($changedData['status'])) {
                 //关闭问题时悬赏退回
                 if ($changedData['status'] == 'closed') {
+                    //减少未采纳数
+                    if (!$row['best_answer_id']) {
+                        User::decrease('unadopted', 1, $row->user_id);
+                    }
                     //退回赏金
                     if ($row->price > 0 && !$row->best_answer_id) {
                         \app\common\model\User::money($row->price, $row->user_id, '悬赏退回');
                         $row->price = 0;
                         $row->rewardtime = 0;
                         $row->save();
+                    }
+                } elseif ($changedData['status'] == 'normal') {
+                    //增加未采纳数
+                    if (!$row['best_answer_id']) {
+                        User::increase('unadopted', 1, $row->user_id);
                     }
                 }
             }
@@ -181,6 +191,70 @@ class Question Extends Model
     public function getFullUrlAttr($value, $data)
     {
         return addon_url('ask/question/show', [':id' => $data['id']], true, true);
+    }
+
+    public function getStyleTextAttr($value, $data)
+    {
+        $color = $this->getAttr("style_color");
+        $color = $color ? $color : "inherit";
+        $color = str_replace(['#', ' '], '', $color);
+        $bold = $this->getAttr("style_bold") ? "bold" : "normal";
+        $underline = $this->getAttr("style_underline") ? "underline" : "none";
+        $attr = [];
+        if ($bold) {
+            $attr[] = "font-weight:{$bold};";
+        }
+        if ($underline) {
+            $attr[] = "text-decoration:{$underline};";
+        }
+        if (stripos($color, ',') !== false) {
+            list($first, $second) = explode(',', $color);
+            $attr[] = "background-image: -webkit-linear-gradient(0deg, #{$first} 0%, #{$second} 100%);background-image: linear-gradient(90deg, #{$first} 0%, #{$second} 100%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;";
+        } else {
+            $attr[] = "color:#{$color};";
+        }
+
+        return implode('', $attr);
+    }
+
+    public function getStyleColorFirstAttr($value, $data)
+    {
+        $color = $this->getAttr('style_color');
+        $colorArr = explode(',', $color);
+        return $colorArr[0];
+    }
+
+    public function getStyleColorSecondAttr($value, $data)
+    {
+        $color = $this->getAttr('style_color');
+        $colorArr = explode(',', $color);
+        return isset($colorArr[1]) ? $colorArr[1] : '';
+    }
+
+    public function getStyleBoldAttr($value, $data)
+    {
+        return in_array('b', explode('|', $data['style']));
+    }
+
+    public function getStyleUnderlineAttr($value, $data)
+    {
+        return in_array('u', explode('|', $data['style']));
+    }
+
+    public function getStyleColorAttr($value, $data)
+    {
+        $styleArr = explode('|', $data['style']);
+        foreach ($styleArr as $index => $item) {
+            if (preg_match('/\,|#/', $item)) {
+                return $item;
+            }
+        }
+        return '';
+    }
+
+    public function getFlagListAttr($value, $data)
+    {
+        return explode(',', $data['flag']);
     }
 
     /**
@@ -279,16 +353,18 @@ class Question Extends Model
                 foreach (explode('&', $flag) as $k => $v) {
                     $arr[] = "FIND_IN_SET('{$v}', flag)";
                 }
-                if ($arr)
+                if ($arr) {
                     $condition .= "(" . implode(' AND ', $arr) . ")";
+                }
             } else {
                 $condition .= ($condition ? ' AND ' : '');
                 $arr = [];
                 foreach (array_merge(explode(',', $flag), explode('|', $flag)) as $k => $v) {
                     $arr[] = "FIND_IN_SET('{$v}', flag)";
                 }
-                if ($arr)
+                if ($arr) {
                     $condition .= "(" . implode(' OR ', $arr) . ")";
+                }
             }
         }
         $order = $orderby == 'rand' ? 'rand()' : (in_array($orderby, ['createtime', 'updatetime', 'answers', 'views', 'weigh', 'id']) ? "{$orderby} {$orderway}" : "createtime {$orderway}");
@@ -358,11 +434,12 @@ class Question Extends Model
             ->where(function ($query) use ($type, $category_id, $user_id, $tag_id) {
                 if ($type == 'price') {
                     $query->where('price', '>', 0);
-                } else if ($type == 'unsolved') {
+                } elseif ($type == 'unsolved') {
                     $query->where('best_answer_id', '=', 0);
-                } else if ($type == 'unanswer') {
+                    $query->where('status', '=', 'normal');
+                } elseif ($type == 'unanswer') {
                     $query->where('answers', '=', 0);
-                } else if ($type == 'unsettled') {
+                } elseif ($type == 'unsettled') {
                     $query->where('price', '>', 0);
                     $query->where('best_answer_id', '=', 0);
                     $query->where('rewardtime', '<', strtotime("-" . self::$config['adoptdays'] . ' days'));
@@ -410,7 +487,7 @@ class Question Extends Model
         $tag['condition'] = function ($query) use ($tag, $type) {
             if ($type == 'price') {
                 $query->where('price', '>', 0);
-            } else if ($type == 'unanswer') {
+            } elseif ($type == 'unanswer') {
                 $query->where('answers', '=', 0);
             }
             $query->where('id', 'in', function ($query) use ($tag) {
@@ -450,5 +527,4 @@ class Question Extends Model
     {
         return $this->belongsTo('\app\common\model\User', 'user_id', 'id')->setEagerlyType(1);
     }
-
 }

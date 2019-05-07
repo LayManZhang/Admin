@@ -223,6 +223,9 @@ var ASK = {
                             q.remove();
                         }, 100);
                     } else if (e.keyCode == 13 || e.keyCode == 10) {
+                        if (question.val() == '') {
+                            return false;
+                        }
                         form.trigger("submit");
                     }
                 }
@@ -242,7 +245,7 @@ var ASK = {
                     if (typeof callback === 'function') {
                         callback.call(elem, row);
                     } else {
-                        $(elem + "_addTag").toggle(tags.val().split(/\,/).length < 3).focus();
+                        $(elem + "_addTag").toggle(tags.val().split(/\,/).length <= 3).focus();
                         $(elem + "_tag").trigger("blur.autocomplete").focus();
                     }
                 },

@@ -438,4 +438,20 @@ BEGIN;
 UPDATE `__PREFIX__ask_user` SET isexpert='1',experttitle='认证专家' WHERE `user_id` = 1;
 COMMIT;
 
+BEGIN;
+ALTER TABLE `__PREFIX__ask_question` MODIFY COLUMN `flag` set('index','hot','recommend','top') NULL DEFAULT NULL COMMENT '标志' AFTER `price`;
+COMMIT;
+
+BEGIN;
+ALTER TABLE `__PREFIX__ask_article` MODIFY COLUMN `flag` set('index','hot','recommend','top') NULL DEFAULT NULL COMMENT '标志' AFTER `price`;
+COMMIT;
+
+BEGIN;
+ALTER TABLE `__PREFIX__ask_question` ADD COLUMN `style` varchar(100) NULL DEFAULT '' COMMENT '样式' AFTER `title`;
+COMMIT;
+
+BEGIN;
+ALTER TABLE `__PREFIX__ask_article` ADD COLUMN `style` varchar(100) NULL DEFAULT '' COMMENT '样式' AFTER `title`;
+COMMIT;
+
 SET FOREIGN_KEY_CHECKS = 1;

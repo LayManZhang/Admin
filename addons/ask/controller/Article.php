@@ -141,8 +141,14 @@ class Article extends Base
             if (!$tags) {
                 $this->error('标签不能为空');
             }
+            if ($tags == $title) {
+                $this->error('请给文章做好标签归类，标题和标签不能相同');
+            }
             if (!$content) {
                 $this->error('内容不能为空');
+            }
+            if ($content == $title) {
+                $this->error('请完善文章的内容，标题和内容不能相同');
             }
             if ($this->auth->score < $config['limitscore']['postarticle']) {
                 $this->error('你的积分小于' . $config['limitscore']['postarticle'] . '，无法发布文章');
@@ -316,6 +322,48 @@ class Article extends Base
             $this->success("删除失败");
         }
         $this->success("删除成功", addon_url("ask/article/index"));
+    }
+
+    /**
+     * 配置
+     */
+    public function config()
+    {
+        $this->view->engine->layout(false);
+        $question_id = $this->request->param('id');
+
+        $article = \addons\ask\model\Article::get($question_id);
+        if (!$article) {
+            $this->error("文章未找到!");
+        }
+        if (!Service::isAdmin()) {
+            if ($article['status'] == 'hidden') {
+                $this->error("无法进行越权访问!");
+            }
+        }
+        if ($this->request->isPost()) {
+            $color = $this->request->post("color/a", []);
+            $style = $this->request->post("style/a", []);
+            $flag = $this->request->post("flag/a", []);
+            $color = array_unique(array_filter($color));
+            $style[] = implode(',', $color);
+            $style = array_unique(array_filter($style));
+            $flag = array_unique(array_filter($flag));
+            Db::startTrans();
+            try {
+                $article->style = implode('|', $style);
+                $article->flag = implode(',', $flag);
+                $article->save();
+                Db::commit();
+            } catch (Exception $e) {
+                Db::rollback();
+                $this->error("修改失败");
+            }
+            $this->success("修改成功");
+        }
+        $this->view->assign('__article__', $article);
+        $this->view->assign('__item__', $article);
+        $this->success("", "", $this->view->fetch('common/config'));
     }
 
     /**

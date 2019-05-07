@@ -11,7 +11,7 @@
                 {if $article.price>0}
                 <span class="price-tag" data-toggle="tooltip" data-title="此文章需要支付{$article.price}元才能查看">￥{$article.price}</span>
                 {/if}
-                {$article.title}
+                <span style="{$article.style_text}">{$article.title}</span>
             </a>
 
             {if $article.tags}

@@ -76,6 +76,10 @@ class Order extends Base
             if (!$pay) {
                 $this->error('签名错误');
             }
+            //微信支付没有返回链接
+            if ($pay === true) {
+                $this->success("请返回网站查看支付状态!", "");
+            }
             $data = $pay->verify();
 
             $order = \addons\ask\model\Order::get($data['out_trade_no']);

@@ -6,6 +6,7 @@ use addons\cms\model\Archives as ArchivesModel;
 use addons\cms\model\Channel;
 use addons\cms\model\Modelx;
 use think\Config;
+use think\Db;
 
 /**
  * 文档控制器
@@ -45,14 +46,25 @@ class Archives extends Base
                 $fieldsContentList = $model->getFieldsContentList($model->id);
                 //附加列表字段
                 array_walk($fieldsContentList, function ($content, $field) use (&$addon) {
-                    $object = explode(',',$addon[$field]);
-                    $object_text = '';
-                    foreach ($object as $k=>$v){
+                    if(isset($addon[$field])){
+                        $object = explode(',',$addon[$field]);
+                        $object_text = '';
+                        foreach ($object as $k=>$v){
 //                        $addon[$field . '_text'] = isset($content[$addon[$v]]) ? $content[$addon[$v]] : $addon[$field];
-                        $object_text .= isset($content[$v]) ? $content[$v].' ' : $addon[$field].'';
-                        $addon[$field . '_text'] = $object_text;
+                            $object_text .= isset($content[$v]) ? $content[$v].' ' : $addon[$field].'';
+                            $addon[$field . '_text'] = $object_text;
+                        }
+                    }
+                    if(isset($addon['xmjb'])){
+                        $object = explode(',',$addon['xmjb']);
+                        $object = array_filter($object);
+                        $length = count($object);
+                        $xmjb = $object[$length-1];
+                        $object_text = Db::name('cms_xmjb')->where('id',$xmjb)->find()['grade_fname'];
+                        $addon['xmjb_text'] = $object_text;
                     }
                 });
+
             }
             $archives->setData($addon);
         } else {
@@ -61,6 +73,7 @@ class Archives extends Base
         $archives->setInc("views", 1);
 
         $this->view->assign("__ARCHIVES__", $archives);
+
         $this->view->assign("__CHANNEL__", $channel);
         Config::set('cms.title', $archives['title']);
         Config::set('cms.keywords', $archives['keywords']);

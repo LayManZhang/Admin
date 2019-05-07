@@ -71,11 +71,15 @@
                 <li class="{:$articleType=='new'?'active':''}"><a href="?category={$categoryId}&type=new">最新</a></li>
                 <li class="{:$articleType=='hot'?'active':''}"><a href="?category={$categoryId}&type=hot">热门</a></li>
                 <li class="{:$articleType=='price'?'active':''}"><a href="?category={$categoryId}&type=price">付费</a></li>
-                <a href="{:addon_url('ask/article/post')}" class="btn btn-light pull-right"><i class="fa fa-pencil"></i> 分享经验</a>
+                <a href="{:addon_url('ask/article/post')}" class="btn btn-light pull-right"><i class="fa fa-pencil"></i> 发布文章</a>
             </ul>
 
             <div class="tab-inner" style="background:#fff;padding:15px;">
                 <div class="question-list" data-page="{$Think.get.page|default=1}" data-more="{$articleList->hasPages()}">
+                    {ask:articlelist id="article" flag="top" row="5" orderby="views"}
+                    {include file="common/articleitem" /}
+                    {/ask:articlelist}
+
                     {foreach name="articleList" id="article"}
                     {include file="common/articleitem" /}
                     {/foreach}

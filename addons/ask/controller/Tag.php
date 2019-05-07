@@ -103,6 +103,7 @@ class Tag extends Base
         }
         if ($this->request->isPost()) {
             $name = $this->request->request("name");
+            $category_id = $this->request->request("category_id/d");
             $icon = $this->request->request("icon");
             $image = $this->request->request("image");
             $intro = $this->request->request("intro");
@@ -110,14 +111,17 @@ class Tag extends Base
                 $this->error("话题名称不能为空");
             }
             $data = [
-                'name'  => $name,
-                'icon'  => $icon,
-                'image' => $image,
-                'intro' => $intro,
+                'name'        => $name,
+                'category_id' => $category_id,
+                'icon'        => $icon,
+                'image'       => $image,
+                'intro'       => $intro,
             ];
             $tag->save($data);
             $this->success("更新成功");
         }
+        $categoryList = \addons\ask\model\Category::getIndexCategoryList('tag');
+        $this->view->assign('categoryList', $categoryList);
         $this->view->assign('__tag__', $tag);
         $this->success('', '', $this->view->fetch('tag/update'));
     }

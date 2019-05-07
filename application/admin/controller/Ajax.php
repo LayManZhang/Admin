@@ -273,6 +273,7 @@ class Ajax extends Backend
     {
         $province = input('param.row.xmjb.province');
         $city = input('param.row.xmjb.city');
+        $area = input('param.row.xmjb.area');
         $where = ['parent_id' => 0, 'grade_type' => 1];
         $provincelist = null;
         if ($province !== '') {
@@ -284,6 +285,13 @@ class Ajax extends Backend
                 if ($city) {
                     $where['parent_id'] = $city;
                     $where['grade_type'] = 3;
+                }
+                $provincelist = Db::name('cms_xmjb')->where($where)->field('id as value,grade_name as name')->select();
+            }
+            if ($area !== '') {
+                if ($area) {
+                    $where['parent_id'] = $area;
+                    $where['grade_type'] = 4;
                 }
                 $provincelist = Db::name('cms_xmjb')->where($where)->field('id as value,grade_name as name')->select();
             }

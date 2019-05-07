@@ -181,6 +181,70 @@ class Article Extends Model
         return implode(',', $tagsArr);
     }
 
+    public function getStyleTextAttr($value, $data)
+    {
+        $color = $this->getAttr("style_color");
+        $color = $color ? $color : "inherit";
+        $color = str_replace(['#', ' '], '', $color);
+        $bold = $this->getAttr("style_bold") ? "bold" : "normal";
+        $underline = $this->getAttr("style_underline") ? "underline" : "none";
+        $attr = [];
+        if ($bold) {
+            $attr[] = "font-weight:{$bold};";
+        }
+        if ($underline) {
+            $attr[] = "text-decoration:{$underline};";
+        }
+        if (stripos($color, ',') !== false) {
+            list($first, $second) = explode(',', $color);
+            $attr[] = "background-image: -webkit-linear-gradient(0deg, #{$first} 0%, #{$second} 100%);background-image: linear-gradient(90deg, #{$first} 0%, #{$second} 100%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;";
+        } else {
+            $attr[] = "color:#{$color};";
+        }
+
+        return implode('', $attr);
+    }
+
+    public function getStyleColorFirstAttr($value, $data)
+    {
+        $color = $this->getAttr('style_color');
+        $colorArr = explode(',', $color);
+        return $colorArr[0];
+    }
+
+    public function getStyleColorSecondAttr($value, $data)
+    {
+        $color = $this->getAttr('style_color');
+        $colorArr = explode(',', $color);
+        return isset($colorArr[1]) ? $colorArr[1] : '';
+    }
+
+    public function getStyleBoldAttr($value, $data)
+    {
+        return in_array('b', explode('|', $data['style']));
+    }
+
+    public function getStyleUnderlineAttr($value, $data)
+    {
+        return in_array('u', explode('|', $data['style']));
+    }
+
+    public function getStyleColorAttr($value, $data)
+    {
+        $styleArr = explode('|', $data['style']);
+        foreach ($styleArr as $index => $item) {
+            if (preg_match('/\,|#/', $item)) {
+                return $item;
+            }
+        }
+        return '';
+    }
+
+    public function getFlagListAttr($value, $data)
+    {
+        return explode(',', $data['flag']);
+    }
+
     public function getIscustompriceAttr($value, $data)
     {
         if ($data['price'] == 0) {

@@ -75,7 +75,7 @@ class Question extends Model
 
         self::afterUpdate(function ($row) use ($config) {
             $changedData = $row->getChangedData();
-            if (is_null($changedData['deletetime'])) {
+            if (isset($changedData['deletetime']) && is_null($changedData['deletetime'])) {
                 User::increase('questions', 1, $row->user_id);
                 $config['score']['postquestion'] && \app\common\model\User::score($config['score']['postquestion'], $row->user_id, '恢复问题');
             }
@@ -91,7 +91,7 @@ class Question extends Model
 
     public function getFlagList()
     {
-        return ['index' => __('Index'), 'hot' => __('Hot'), 'recommend' => __('Recommend')];
+        return ['index' => __('Index'), 'hot' => __('Hot'), 'recommend' => __('Recommend'), 'top' => __('Top')];
     }
 
     public function getStatusList()

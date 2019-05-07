@@ -33,6 +33,7 @@ class Archives extends Backend
         parent::_initialize();
         $this->model = new \app\admin\model\cms\Archives;
 
+
         //是否超级管理员
         $this->isSuperAdmin = $this->auth->isSuperAdmin();
         $channelList = [];
@@ -64,6 +65,7 @@ class Archives extends Backend
                 'state'  => $state
             ];
         }
+
         $tree = Tree::instance()->init($all, 'parent_id');
         $channelOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
         $this->view->assign('channelOptions', $channelOptions);
@@ -582,6 +584,9 @@ class Archives extends Backend
 
             $this->view->assign('fields', $fields);
             $this->view->assign('values', $values);
+//            if($channel_id==100){
+//                $this->success('', null, ['html' => $this->view->fetch('fields2')]);
+//            }
             $this->success('', null, ['html' => $this->view->fetch('fields')]);
         } else {
             $this->error(__('Please select channel'));

@@ -152,6 +152,7 @@ class Tag Extends Model
             return false;
         }
         $field = "{$type}s";
+        $tags = str_replace('，', ',', $tags);
         $tagsArr = explode(',', $tags);
         $tagsArr = array_unique(array_filter(array_map('strtolower', $tagsArr)));
 

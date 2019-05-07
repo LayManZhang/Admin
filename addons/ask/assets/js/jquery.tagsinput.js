@@ -320,8 +320,8 @@
 
                 }
                 // if user types a default delimiter like comma,semicolon and then create a new tag
-                $(data.fake_input).bind('keypress', data, function (event) {
-                    if (_checkDelimiter(event)) {
+                $(data.fake_input).bind('keypress textInput', data, function (event) {
+                    if (_checkDelimiter.call(this, event)) {
                         var value = $(event.data.fake_input).val();
                         if (value.indexOf(event.data.delimiter) > -1 || value.indexOf(" ") > -1) {
                             $(event.data.fake_input).addClass('not_valid');
@@ -398,17 +398,25 @@
      */
     var _checkDelimiter = function (event) {
         var found = false;
-        if (event.which == 13 || event.which == 32) {
+        var key = event.keyCode || event.which || event.charCode;
+        key = key || event.originalEvent.data.charCodeAt(0);
+
+        if (key == 0 || key == 229) {
+            var value = $(this).val();
+            key = value.charCodeAt(value.length - 1);
+        }
+
+        if (key == 13 || key == 32) {
             return true;
         }
 
         if (typeof event.data.delimiter === 'string') {
-            if (event.which == event.data.delimiter.charCodeAt(0)) {
+            if (key == event.data.delimiter.charCodeAt(0)) {
                 found = true;
             }
         } else {
             $.each(event.data.delimiter, function (index, delimiter) {
-                if (event.which == delimiter.charCodeAt(0)) {
+                if (key == delimiter.charCodeAt(0)) {
                     found = true;
                 }
             });

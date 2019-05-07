@@ -33,6 +33,8 @@ class Feed Extends Model
         $url = 'javascript:';
         if ($data['type'] == 'question') {
             $url = addon_url('ask/question/show', [':id' => $data['source_id']]);
+        } else if ($data['type'] == 'article') {
+            $url = addon_url('ask/article/show', [':id' => $data['source_id']]);
         } else if ($data['type'] == 'answer') {
             $answer = Answer::get($data['source_id']);
             if ($answer) {
@@ -48,8 +50,8 @@ class Feed Extends Model
      * @param string $content
      * @param string $action
      * @param string $type
-     * @param int $source_id
-     * @param int $user_id
+     * @param int    $source_id
+     * @param int    $user_id
      */
     public static function record($title, $content, $action, $type, $source_id, $user_id)
     {

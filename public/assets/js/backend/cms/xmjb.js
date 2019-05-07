@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'selectpage'], function ($, undefined, Backend, Table, Form, selectPage) {
 
     var Controller = {
         index: function () {
@@ -31,7 +31,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'grade_name', title: __('Grade_name'),operate : 'like %...%'},
                         {field: 'grade_tname', title: __('Grade_tname'),operate : 'like %...%'},
                         {field: 'grade_fname', title: __('Grade_fname'),operate : 'like %...%'},
-                        {field: 'grade_type', title: __('Grade_type'), searchList: {"1":__('一级'),"2":__('二级'),"3":__('三级')}, formatter: Table.api.formatter.normal},
+                        {field: 'grade_type', title: __('Grade_type'), searchList: {"1":__('一级'),"2":__('二级'),"3":__('三级'),"4":__('四级')}, formatter: Table.api.formatter.normal},
                         {field: 'myorder', title: __('Myorder')},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]

@@ -150,7 +150,7 @@ $(function () {
                             url: "answer/update",
                             data: $(this).serialize()
                         }, function (data, ret) {
-                            $(that).closest(".comment").find(".wysiwyg").html(data);
+                            $(that).closest(".comment").find(".comment-body").find(".wysiwyg").html(data);
                             layer.closeAll();
                             return false;
                         });

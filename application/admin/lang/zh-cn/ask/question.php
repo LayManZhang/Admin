@@ -7,6 +7,7 @@ return [
     'Title'                => '标题',
     'Price'                => '悬赏金额',
     'Flag'                 => '标志',
+    'Top'                  => '置顶',
     'Voteup'               => '点赞次数',
     'Votedown'             => '点踩次数',
     'Followers'            => '关注次数',

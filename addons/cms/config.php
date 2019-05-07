@@ -39,7 +39,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => '中科创',
+    'value' => '中科创2',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',
@@ -54,7 +54,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => '中科创',
+    'value' => '中科创3',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',

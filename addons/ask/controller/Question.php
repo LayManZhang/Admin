@@ -168,8 +168,14 @@ class Question extends Base
             if (!$tags) {
                 $this->error('标签不能为空，请确保有按空格或回车确认');
             }
+            if ($tags == $title) {
+                $this->error('请给问题做好标签分类，标题和标签不能相同');
+            }
             if (!$content) {
                 $this->error('内容不能为空');
+            }
+            if ($content == $title) {
+                $this->error('请完善问题的内容，标题和内容不能相同');
             }
             if ($price > $this->auth->money) {
                 $this->error('当前余额不足，无法发布为悬赏问题');
@@ -594,6 +600,48 @@ class Question extends Base
             $this->success("删除失败");
         }
         $this->success("删除成功", addon_url("ask/question/index"));
+    }
+
+    /**
+     * 配置
+     */
+    public function config()
+    {
+        $this->view->engine->layout(false);
+        $question_id = $this->request->param('id');
+
+        $question = \addons\ask\model\Question::get($question_id);
+        if (!$question) {
+            $this->error("问题未找到!");
+        }
+        if (!Service::isAdmin()) {
+            if ($question['status'] == 'hidden') {
+                $this->error("无法进行越权访问!");
+            }
+        }
+        if ($this->request->isPost()) {
+            $color = $this->request->post("color/a", []);
+            $style = $this->request->post("style/a", []);
+            $flag = $this->request->post("flag/a", []);
+            $color = array_unique(array_filter($color));
+            $style[] = implode(',', $color);
+            $style = array_unique(array_filter($style));
+            $flag = array_unique(array_filter($flag));
+            Db::startTrans();
+            try {
+                $question->style = implode('|', $style);
+                $question->flag = implode(',', $flag);
+                $question->save();
+                Db::commit();
+            } catch (Exception $e) {
+                Db::rollback();
+                $this->error("修改失败");
+            }
+            $this->success("修改成功");
+        }
+        $this->view->assign('__question__', $question);
+        $this->view->assign('__item__', $question);
+        $this->success("", "", $this->view->fetch('common/config'));
     }
 
     public function get_answer_list()

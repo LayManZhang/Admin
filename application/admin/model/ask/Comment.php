@@ -56,7 +56,7 @@ class Comment extends Model
 
         self::afterUpdate(function ($row) use ($config) {
             $changedData = $row->getChangedData();
-            if (is_null($changedData['deletetime'])) {
+            if (isset($changedData['deletetime']) && is_null($changedData['deletetime'])) {
                 $model = Service::getModelByType($row['type'], $row['source_id']);
                 if ($model) {
                     try {

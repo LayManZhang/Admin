@@ -14,6 +14,15 @@
             <div class="mb-3">
                 话题是用于将相似的问题进行归类，正确的使用话题能更快的发现和解决你的问题
             </div>
+            <div class="category-list mb-2">
+                <a href="?" class="btn btn-{:$categoryId?'light':'primary'} btn-labeled">
+                    <span class="btn-label"><i class="fa fa-home"></i></span>全部
+                </a>
+                {foreach name="categoryList" id="category"}
+                <a class="btn btn-{:$category.id==$categoryId?'primary':'light'} btn-labeled" href="?category={$category.id}" role="button">
+                    {if $category.icon}<span class="btn-label"><i class="{$category.icon}"></i></span>{/if}{$category.name}</a>
+                {/foreach}
+            </div>
             <div class="tag-list">
                 <div class="row">
                     {foreach name="tagList" id="item"}

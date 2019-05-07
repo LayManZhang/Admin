@@ -393,7 +393,7 @@ $(function () {
     //更多评论
     $(document).on("click", ".btn-morecomment", function () {
         var that = this;
-        var subcomments = $(this).closest(".sub-comments");
+        var subcomments = $(this).closest(".sub-comments").size() > 0 ? $(this).closest(".sub-comments") : document;
         $.ajax({
             url: "ajax/get_comment_list",
             dataType: 'json',
@@ -407,6 +407,51 @@ $(function () {
                 $(that).data("page", parseInt($(that).data("page")) + 1);
             }
         });
+    });
+
+    //更多设置
+    $(document).on("click", ".btn-config", function () {
+        var that = this;
+        ASK.api.ajax({
+            url: $(that).attr("href"),
+            type: 'get',
+        }, function (data, ret) {
+            layer.open({
+                title: '更多设置',
+                type: 1,
+                zIndex: 1031,
+                area: isMobile ? 'auto' : ["350px", "320px"],
+                content: data,
+                success: function (layero, index) {
+                    $('.colorpicker', layero).colorpicker({
+                        color: function () {
+                            var color = $(this.eve).prev().val();
+                            return color;
+                        }
+                    }, function (event, obj) {
+                        $(this.eve).prev().val('#' + obj.hex);
+                    }, function (event) {
+                        $(this.eve).prev().val('');
+                    });
+
+                    $("form", layero).on("submit", function () {
+                        ASK.api.ajax({
+                            url: $(this).attr("action"),
+                            data: $(this).serialize()
+                        }, function (data, ret) {
+                            layer.closeAll();
+                            ASK.api.msg(ret.msg, function () {
+                                location.reload();
+                            });
+                            return false;
+                        });
+                        return false;
+                    });
+                }
+            });
+            return false;
+        });
+        return false;
     });
 
     //返回顶部

@@ -7,5 +7,5 @@ https://www.fastadmin.net/page/addon-agreement.html
 https://ask.fastadmin.net/zone/ask.html 
 
 ### 温馨提示
-此插件为FastAdmin的商业产品，禁止分享、转售、复制CMS插件源码给他人使用，违者将追究法律责任
+此插件为FastAdmin的商业产品，禁止分享、转售、复制知识付费社区源码给他人使用，违者将追究法律责任
 

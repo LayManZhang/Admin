@@ -22,7 +22,7 @@
                 {if $question.price>0}
                 <span class="price-tag" data-toggle="tooltip" data-title="如果回答被采纳，回答者将获得{$question.price}元">￥{$question.price}</span>
                 {/if}
-                {$question.title}
+                <span style="{$question.style_text}">{$question.title}</span>
             </a>
         </h2>
         <div class="tags">

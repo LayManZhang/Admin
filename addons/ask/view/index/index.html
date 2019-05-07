@@ -70,6 +70,11 @@
 
             <div class="tab-inner" style="background:#fff;padding:15px;">
                 <div class="question-list" data-page="{$Think.get.page|default=1}" data-more="{$questionList->hasPages()}">
+
+                    {ask:questionlist id="question" flag="top" row="5" orderby="views"}
+                    {include file="common/questionitem" /}
+                    {/ask:questionlist}
+
                     {foreach name="questionList" id="question"}
                     {include file="common/questionitem" /}
                     {/foreach}
@@ -87,11 +92,56 @@
         </div>
         <div class="col-md-4 col-sm-12">
             <div class="article-sidebar">
+                <!-- S 每日签到 -->
+                <div class="panel panel-default recommend-article">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            每日签到
+                            <div class="pull-right">
+                                <a class="btn btn-link btn-xs btn-rank" style="font-size:12px;" href="javascript:">排行榜</a>
+                            </div>
+                        </h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        {if !$user}
+                        <a href="{:url('index/user/login')}" class="btn btn-primary"><i class="fa fa-user"></i> 请登录后签到</a>
+                        <a href="{:url('index/user/register')}" class="btn btn-outline-primary">注册</a>
+                        {elseif isset($signin) /}
+                        <a href="javascript:" class="btn btn-primary disabled"><i class="fa fa-location-arrow"></i> 今日已签到, 连续签到 {$signin.successions} 天</a>
+                        {else /}
+                        <a href="javascript:" class="btn btn-primary btn-signin"><i class="fa fa-location-arrow"></i> 立即签到</a>
+                        {/if}
+                    </div>
+                </div>
+                <!-- E 每日签到 -->
                 {include file="common/sidebar" /}
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/html" id="ranktpl">
+    <div style="padding:20px;min-height:300px;">
+        <table class="table table-striped table-hover signin-rank-table">
+            <thead>
+            <tr>
+                <th>头像</th>
+                <th width="50%">昵称</th>
+                <th class="text-center">连续签到</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%for(var i=0;i< ranklist.length;i++){%>
+            <tr>
+                <td><a href="<%=ranklist[i]['user']['url']%>"><img src="<%=ranklist[i]['user']['avatar']%>" height="30" width="30" alt="" class="img-circle"/></a></td>
+                <td><a href="<%=ranklist[i]['user']['url']%>"><%=ranklist[i]['user']['nickname']%></a></td>
+                <td class="text-center"><%=ranklist[i]['days']%> 天</td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
+</script>
 
 <script data-render="script" src="__ADDON__/js/jquery.swiper.min.js"></script>
 
@@ -122,6 +172,28 @@
                     spaceBetween: 10
                 }
             }
+        });
+        $(document).on("click", ".btn-signin,.today", function () {
+            ASK.api.ajax("{:url('index/signin/dosign')}", function () {
+                ASK.api.msg("签到成功!", function () {
+                    location.reload();
+                });
+            });
+            return false;
+        });
+        $(document).on("click", ".btn-rank", function () {
+            ASK.api.ajax("{:url('index/signin/rank')}", function (data) {
+                layer.open({
+                    title: '签到排行榜',
+                    type: 1,
+                    zIndex: 88,
+                    area: isMobile ? 'auto' : ["400px"],
+                    content: template("ranktpl", data),
+                    btn: []
+                });
+                return false;
+            });
+            return false;
         });
     })
 </script>
