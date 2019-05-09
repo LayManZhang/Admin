@@ -13,6 +13,14 @@
         border-radius: 5px;
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
     }
+    table{
+        table-layout : fixed;
+    }
+    table tbody tr td{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 <script src="/assets/libs/jquery/dist/jquery.js"></script>
 <script src="/assets/libs/fastadmin-layer/dist/layer.js"></script>
@@ -30,15 +38,15 @@
             success: function (data) {
                 datalength = data.length;
                 var content = '  <button class="btn btn-info" type="button" onclick="Export('+id+')" style="margin-left: 20px;"><i class="fa fa-share-square"></i>导出PDF报告</button>' +
-                    '<table class="table table-hover table-striped">' +
+                    '<table class="table table-hover" >' +
                     '                                <thead>' +
                     '                                    <tr>' +
-                    '                                        <th><input name="btSelectAll" type="checkbox" onclick="btSelectAll();"></th>' +
+                    '                                        <th style="width: 20px;"><input name="btSelectAll" type="checkbox" onclick="btSelectAll();"></th>' +
                     '                                        <th style="width: 85px; " data-field="HighRewardNum" tabindex="0"><div class="th-inner ">是否导出</div><div class="fht-cell"></div></th><th style="width: 150px; " data-field="PEName" tabindex="0"><div class="th-inner ">项目名称</div><div class="fht-cell"></div></th>' +
-                    '                                        <th style="width: 150px; " data-field="DeptFullName" tabindex="0"><div class="th-inner ">营业额要求</div><div class="fht-cell"></div></th>                            <th style="width: 150px; " data-field="SupportFrom" tabindex="0"><div class="th-inner ">纳税要求</div><div class="fht-cell"></div></th>' +
-                    '                                        <th style="width: 150px; " data-field="AreaFullName" tabindex="0"><div class="th-inner ">资助金额</div><div class="fht-cell"></div></th>                            <th style="width: 150px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">资助对象</div><div class="fht-cell"></div></th>' +
-                    '                                        <th style="width: 150px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">资助方式</div><div class="fht-cell"></div></th>                            <th style="width: 150px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">资助方向</div><div class="fht-cell"></div></th>' +
-                    '                                        <th style="width: 150px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">支持领域</div><div class="fht-cell"></div></th>                            <th style="width: 150px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">项目简介</div><div class="fht-cell"></div></th>' +
+                    '                                        <th style="width: 100px; " data-field="DeptFullName" tabindex="0"><div class="th-inner ">营业额要求</div><div class="fht-cell"></div></th>                            <th style="width: 100px; " data-field="SupportFrom" tabindex="0"><div class="th-inner ">纳税要求</div><div class="fht-cell"></div></th>' +
+                    '                                        <th style="width: 100px; " data-field="AreaFullName" tabindex="0"><div class="th-inner ">资助金额</div><div class="fht-cell"></div></th>                            <th style="width: 100px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">资助对象</div><div class="fht-cell"></div></th>' +
+                    '                                        <th style="width: 100px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">资助方式</div><div class="fht-cell"></div></th>                            <th style="width: 100px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">资助方向</div><div class="fht-cell"></div></th>' +
+                    '                                        <th style="width: 100px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">支持领域</div><div class="fht-cell"></div></th>                            <th style="width: 120px; " data-field="LevelFullName" tabindex="0"><div class="th-inner ">项目简介</div><div class="fht-cell"></div></th>' +
                     '                                    </tr>' +
                     '                                </thead>' +
                     '                                <tbody>';
@@ -47,15 +55,15 @@
                 $.each(data,function(index,obj) {
                     html += '<tr>' +
                         '                                        <td class="bs-checkbox"><input name="btSelectItem" type="checkbox" val="'+obj.id+'" id="btSelectItem'+obj.id+'" onclick="btSelectItem('+obj.id+');"></td>                                                                <td style="background-color: ; width: 150px; "><span title="'+obj.id+'">导出</span></td>' +
-                        '                                        <td style="background-color: ; width: 150px; "><a href="/cms/a/'+obj.id+'.html"> '+obj.title+'</a></td>' +
-                        '                                        <td style="background-color: ; width: 150px; "><span title="'+obj.SalesProceeds+'">'+obj.SalesProceeds+'</span></td>' +
-                        '                                        <td style="background-color: ; width: 150px; ">'+obj.Ratal+'</td>' +
-                        '                                        <td style="background-color: ; width: 150px; "><span title="'+obj.Amount+'">'+obj.Amount+'</span></td>' +
-                        '                                        <td style="background-color: ; width: 150px; ">'+obj.Objects_text+'</td>' +
-                        '                                        <td style="background-color: ; width: 150px; "><span>'+obj.Mode_text+'</span></td>' +
-                        '                                        <td style="background-color: ; width: 150px; ">'+obj.Direction_text+'</td>' +
-                        '                                        <td style="background-color: ; width: 150px; "><span>'+obj.Fields_text+'</span></td>' +
-                        '                                        <td style="background-color: ; width: 150px; ">'+obj.Introduction+'</td>      ' +
+                        '                                        <td><a href="/cms/a/'+obj.id+'.html" target="_Blank" title="'+obj.title+'"> '+obj.title+'</a></td>' +
+                        '                                        <td><span title="'+obj.SalesProceeds+'">'+obj.SalesProceeds+'</span></td>' +
+                        '                                        <td>'+obj.Ratal+'</td>' +
+                        '                                        <td><span title="'+obj.Amount+'">'+obj.Amount+'</span></td>' +
+                        '                                        <td title="'+obj.Objects_text+'">'+obj.Objects_text+'</td>' +
+                        '                                        <td title="'+obj.Mode_text+'"><span>'+obj.Mode_text+'</span></td>' +
+                        '                                        <td  title="'+obj.Direction_text+'">'+obj.Direction_text+'</td>' +
+                        '                                        <td><span title="'+obj.Fields_text+'">'+obj.Fields_text+'</span></td>' +
+                        '                                        <td  title="'+obj.Introduction+'">'+obj.Introduction+'</td>      ' +
                         '                                    </tr>';
                 });
 

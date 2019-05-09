@@ -1,4 +1,0 @@
-<?php
-//000000000000
- exit();?>
-a:3:{i:0;a:10:{s:2:"id";i:3;s:4:"type";s:5:"focus";s:4:"name";s:5:"focus";s:5:"title";s:13:"幻灯图片3";s:5:"image";s:34:"/assets/addons/cms/img/focus/3.jpg";s:3:"url";s:24:"http://www.fastadmin.net";s:7:"content";s:3:"333";s:10:"createtime";i:0;s:10:"updatetime";i:0;s:6:"status";s:6:"normal";}i:1;a:10:{s:2:"id";i:2;s:4:"type";s:5:"focus";s:4:"name";s:5:"focus";s:5:"title";s:13:"幻灯图片2";s:5:"image";s:34:"/assets/addons/cms/img/focus/2.jpg";s:3:"url";s:24:"http://www.fastadmin.net";s:7:"content";s:3:"222";s:10:"createtime";i:0;s:10:"updatetime";i:0;s:6:"status";s:6:"normal";}i:2;a:10:{s:2:"id";i:1;s:4:"type";s:5:"focus";s:4:"name";s:5:"focus";s:5:"title";s:13:"幻灯图片1";s:5:"image";s:34:"/assets/addons/cms/img/focus/1.jpg";s:3:"url";s:24:"http://www.fastadmin.net";s:7:"content";s:3:"111";s:10:"createtime";i:0;s:10:"updatetime";i:0;s:6:"status";s:6:"normal";}}

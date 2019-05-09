@@ -59,7 +59,7 @@ class Archives extends Base
                         $object = explode(',',$addon['xmjb']);
                         $object = array_filter($object);
                         $length = count($object);
-                        $xmjb = $object[$length-1];
+                        $xmjb = $object[$length-2];
                         $object_text = Db::name('cms_xmjb')->where('id',$xmjb)->find()['grade_fname'];
                         $addon['xmjb_text'] = $object_text;
                     }

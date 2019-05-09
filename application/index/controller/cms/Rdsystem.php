@@ -2444,12 +2444,9 @@ class Rdsystem extends Frontend
             ->paginate($limit);
         $items = $data->items();
 
-        $yyzd = Db::name('cms_archives')
-            ->alias('a')
-            ->join('cms_addonyyzd b','a.id = b.id')
-            ->where('model_id',7)
-            ->field(['a.id','a.title'])
-            ->select();
+        $yyzd = [
+            ['id'=>1,'title'=>'研发投入核算管理制度']
+        ];
 
         $this->assign('items',$items);
         $this->assign('data',$data);

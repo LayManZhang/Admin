@@ -261,20 +261,23 @@ class Diyform extends Frontend
         $data = db('cms_archives')->alias('a')->join('cms_addonxmzn b','a.id = b.id')->field(['b.*','a.title'])->where($where)->group('xmjb')->select();
         foreach ($data as $key=>$val){
             $xmjb = explode(',',$val['xmjb']);
-
-            if(isset($xmjb[2])&&!empty($xmjb[2])){
+            $object = array_filter($xmjb);
+            $length = count($object);
+            $xmjb = $object[$length-2];
+            if(isset($xmjb)&&!empty($xmjb)){
                 $where['xmjb'] = $val['xmjb'];
-                $xmjb_data = db('cms_xmjb')->where('id',$xmjb[2])->find();
-                $data_arr[$key]['id'] = $xmjb[2];
-                $data_arr[$key]['name'] = $xmjb_data['grade_fname'];
-                $data_arr[$key]['data'] = db('cms_archives')->alias('a')->join('cms_addonxmzn b','a.id = b.id')->field(['b.*','a.title'])->where($where)->select();
-            }else if(isset($xmjb[1])&&!empty($xmjb[1])){
-                $where['xmjb'] = $val['xmjb'];
-                $xmjb_data = db('cms_xmjb')->where('id',$xmjb[1])->find();
-                $data_arr[$key]['id'] = $xmjb[2];
+                $xmjb_data = db('cms_xmjb')->where('id',$xmjb)->find();
+                $data_arr[$key]['id'] = $xmjb;
                 $data_arr[$key]['name'] = $xmjb_data['grade_fname'];
                 $data_arr[$key]['data'] = db('cms_archives')->alias('a')->join('cms_addonxmzn b','a.id = b.id')->field(['b.*','a.title'])->where($where)->select();
             }
+//            else if(isset($xmjb[1])&&!empty($xmjb[1])){
+//                $where['xmjb'] = $val['xmjb'];
+//                $xmjb_data = db('cms_xmjb')->where('id',$xmjb[1])->find();
+//                $data_arr[$key]['id'] = $xmjb[2];
+//                $data_arr[$key]['name'] = $xmjb_data['grade_fname'];
+//                $data_arr[$key]['data'] = db('cms_archives')->alias('a')->join('cms_addonxmzn b','a.id = b.id')->field(['b.*','a.title'])->where($where)->select();
+//            }
         }
         $this->pdf($data_arr);
     }

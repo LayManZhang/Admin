@@ -3,134 +3,46 @@
   <component name="ChangeListManager">
     <list default="true" id="402bff60-30f6-4a94-8237-f2ae91316575" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/lang/zh-cn/ask/article.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/lang/zh-cn/ask/article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/lang/zh-cn/ask/question.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/lang/zh-cn/ask/question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Answer.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Answer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Article.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Comment.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Comment.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Question.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/model/ask/Question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/application/admin/view/ask/question/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/application/admin/view/ask/question/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/assets/css/all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/assets/css/all.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/assets/js/all.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/assets/js/all.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/assets/js/ask.js" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/assets/js/ask.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/assets/js/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/assets/js/common.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/assets/js/jquery.tagsinput.js" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/assets/js/jquery.tagsinput.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/assets/js/question.js" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/assets/js/question.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/controller/Article.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/controller/Article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/controller/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/controller/Index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/controller/Invite.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/controller/Invite.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/controller/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/controller/Order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/controller/Question.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/controller/Question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/controller/Tag.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/controller/Tag.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/gulpfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/info.ini" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/info.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/install.sql" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/install.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/library/Askdown.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/library/Askdown.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/library/Hyperdown.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/library/Hyperdown.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/model/Article.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/model/Article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/model/Feed.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/model/Feed.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/model/Question.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/model/Question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/model/Tag.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/model/Tag.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/article/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/article/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/article/show.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/article/show.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/common/articleitem.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/common/articleitem.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/common/markdowntips.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/common/markdowntips.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/common/questionitem.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/common/questionitem.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/index/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/index/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/question/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/question/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/question/show.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/question/show.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/tag/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/tag/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/tag/show.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/tag/show.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/tag/update.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/tag/update.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/ask/view/user/common/feeditem.html" beforeDir="false" afterPath="$PROJECT_DIR$/addons/ask/view/user/common/feeditem.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/cms/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/cms/config.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/addons/cms/controller/Archives.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/cms/controller/Archives.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/database/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/database/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/database/info.ini" beforeDir="false" afterPath="$PROJECT_DIR$/addons/database/info.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/database/library/Backup.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/database/library/Backup.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/loginvideo/Loginvideo.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/loginvideo/config.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/loginvideo/controller/Index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/loginvideo/info.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/loginvideo/view/background.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/addons/summernote/info.ini" beforeDir="false" afterPath="$PROJECT_DIR$/addons/summernote/info.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/controller/Ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/controller/Ajax.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/controller/cms/Archives.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/controller/cms/Archives.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/controller/cms/Xmjb.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/controller/cms/Xmjb.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/lang/zh-cn/ask/article.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/lang/zh-cn/ask/article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/lang/zh-cn/ask/question.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/lang/zh-cn/ask/question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/model/ask/Answer.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/model/ask/Answer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/model/ask/Article.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/model/ask/Article.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/model/ask/Comment.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/model/ask/Comment.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/model/ask/Question.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/model/ask/Question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/model/cms/Xmjb.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/model/cms/Xmjb.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/ask/question/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/ask/question/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/cms/archives/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/cms/archives/add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/cms/xmjb/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/cms/xmjb/add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/cms/xmjb/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/cms/xmjb/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/extra/addons.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/extra/addons.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/Editable.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/assets/css/bootstrap-editable.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/assets/img/clear.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/assets/img/loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/assets/js/bootstrap-editable.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/config.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/controller/Index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/editable/info.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/nkeditor/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/addons/nkeditor/config.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/nkeditor/info.ini" beforeDir="false" afterPath="$PROJECT_DIR$/addons/nkeditor/info.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/Summernote.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/css/summernote.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/font/summernote.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/font/summernote.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/font/summernote.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/js/summernote.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/js/summernote.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/lang/summernote-zh-CN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/lang/summernote-zh-CN.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/lang/summernote-zh-TW.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/assets/lang/summernote-zh-TW.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/config.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/controller/Index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/addons/summernote/info.ini" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/application/index/controller/cms/Diyform.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/index/controller/cms/Diyform.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/ask/css/all.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/addons/ask/css/all.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/ask/js/all.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/addons/ask/js/all.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/ask/js/ask.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/addons/ask/js/ask.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/ask/js/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/addons/ask/js/common.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/ask/js/jquery.tagsinput.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/addons/ask/js/jquery.tagsinput.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/ask/js/question.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/addons/ask/js/question.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/css/summernote.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/font/summernote.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/font/summernote.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/font/summernote.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/js/summernote.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/js/summernote.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/lang/summernote-zh-CN.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/lang/summernote-zh-CN.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/lang/summernote-zh-TW.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/addons/summernote/lang/summernote-zh-TW.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/index/controller/cms/Rdsystem.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/index/controller/cms/Rdsystem.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/index/view/cms/diyform/assessment_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/index/view/cms/diyform/assessment_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/addons/editable/css/bootstrap-editable.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/addons/editable/img/clear.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/addons/editable/img/loading.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/addons/editable/js/bootstrap-editable.min.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/assets/js/addons.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/addons.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/js/backend/cms/xmjb.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/backend/cms/xmjb.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/28/7794b10d490bf7831eda3e6056030f.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/28/7794b10d490bf7831eda3e6056030f.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/2a/50042420c96e23e801dfc42102107a.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/4e/819c837d54a6ed09abc77a8560a66f.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/4e/819c837d54a6ed09abc77a8560a66f.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/55/2fa0956d9176b72efcf9fa430938b6.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/55/2fa0956d9176b72efcf9fa430938b6.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/5a/f53d188e0ed6c2617828fa4bf7070d.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/5a/f53d188e0ed6c2617828fa4bf7070d.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/72/4441fdf66ab59b8b7c88bb47aba8ed.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/7f/d9ea6e10b70378623ede6e41636e3a.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/87/ac3191bcef751ead4b3b024748b0f0.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/87/ac3191bcef751ead4b3b024748b0f0.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/runtime/cache/8a/3caab5790af28b048b6587153d946f.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/8a/3caab5790af28b048b6587153d946f.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/a1/7c7094d72d8fd910ff98942082bffd.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/a1/7c7094d72d8fd910ff98942082bffd.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/aa/0f7a8aa65058ad251a327709e2081d.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/runtime/cache/a8/fa6f96dc43dfbbdd96b8733226f5da.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/runtime/cache/ad/3ca5e90f4bf1585f121c0dec12c4ea.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/ad/3ca5e90f4bf1585f121c0dec12c4ea.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/ad/ebdc357cbcb3cbade3e54ae65bf205.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/c5/c294868475bab3b7bb7fbd564dbdcc.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/c9/51270453322ff6d313259c10b03f2a.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/ce/0d8f9e614fad7b922998c6c0551179.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/e1/77338522f3f8885769df0f0e72dd64.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/e1/77338522f3f8885769df0f0e72dd64.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/e2/a32eb0d5f11708f31ca49901835d92.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/cache/e2/a32eb0d5f11708f31ca49901835d92.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/cache/e8/72fb7777b6caa00eb98989563cde0a.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/log/201904/28.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/log/201904/29.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/log/201904/30.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/log/201905/05.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/07f472e9118b7f6503cabf93097895c2.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/10329524cf5bb7638cd98da1a0b79472.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/runtime/log/201905/07.log" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/log/201905/07.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/runtime/temp/15ae6139c868df010b1798d43bff7e69.php" beforeDir="false" afterPath="$PROJECT_DIR$/runtime/temp/15ae6139c868df010b1798d43bff7e69.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/1f1d2d81191269cd4a50025e054194fb.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/3a25c3bb76b7dfe931b630dea64cf1ef.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/3af4224b4c54f0c3cfe3dad21343f051.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/47f7b3ab7a79cc99366fe841e2d91aad.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/52c668174d541ee32963bf81f1049697.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/5879e7616e260481c6d0796d335ea6ff.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/5e8db1dc15ee5d767b3ddbccc7aacd3e.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/674156e9438a7ec1e1002c36535d037b.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/98a8293e54b9d069e80c47aa6e768a19.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/a4c9cc0169f1450dc6d7907b776ab860.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/a693ac349eb87881e0c41c9372440283.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/adc46bda10a8f46480fbafc758b66449.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/c7d2d71685ede7769c54b4f7f7a0568f.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/e9cb79d7d889e947df65fbf0f8b889dd.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/runtime/temp/efc660a8976c8972470cd9da6f1946f3.php" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -144,28 +56,80 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/addons/nkeditor/bootstrap.js">
+        <entry file="file://$PROJECT_DIR$/public/assets/js/addons.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1710">
-              <caret line="95" column="16" selection-start-line="95" selection-start-column="16" selection-end-line="95" selection-end-column="16" />
+            <state relative-caret-position="782">
+              <caret line="176" selection-start-line="176" selection-end-line="176" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/addons/nkeditor/Nkeditor.php">
+        <entry file="file://$PROJECT_DIR$/application/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1044">
-              <caret line="59" column="60" selection-start-line="59" selection-start-column="60" selection-end-line="59" selection-end-column="60" />
+            <state relative-caret-position="-252">
+              <caret line="228" column="6" selection-start-line="228" selection-start-column="6" selection-end-line="228" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/addons/cms/view/default/common/layout.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1864">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/assets/js/addons.js">
+        <entry file="file://$PROJECT_DIR$/addons/cms/view/default/common/sidebar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="229" column="31" selection-start-line="229" selection-start-column="31" selection-end-line="229" selection-end-column="31" />
+            <state relative-caret-position="-154" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/thinkphp/base.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="298">
+              <caret line="26" column="33" selection-start-line="26" selection-start-column="33" selection-end-line="26" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/cms/archives/fields.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="16" column="229" selection-start-line="16" selection-start-column="229" selection-end-line="16" selection-end-column="229" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/archives.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1396">
+              <caret line="400" column="39" selection-start-line="400" selection-start-column="39" selection-end-line="400" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/addons/nkeditor/bootstrap.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2250">
+              <caret line="28" column="65" selection-start-line="28" selection-start-column="65" selection-end-line="28" selection-end-column="65" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/assets/js/backend/addon.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="522">
+              <caret line="536" column="57" selection-start-line="536" selection-start-column="16" selection-end-line="536" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -231,7 +195,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/application/index/view/cms/archives/my.html" />
         <option value="$PROJECT_DIR$/application/index/view/cms/RDSystem/import.html" />
         <option value="$PROJECT_DIR$/application/index/view/cms/RDSystem/costdetail.html" />
         <option value="$PROJECT_DIR$/application/index/view/cms/RDSystem/structlist.html" />
@@ -266,7 +229,6 @@
         <option value="$PROJECT_DIR$/application/config.php" />
         <option value="$PROJECT_DIR$/addons/cms/view/default/common/layout.html" />
         <option value="$PROJECT_DIR$/thinkphp/library/think/Controller.php" />
-        <option value="$PROJECT_DIR$/application/index/controller/cms/Rdsystem.php" />
         <option value="$PROJECT_DIR$/application/admin/model/cms/Xmjb.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/Ajax.php" />
         <option value="$PROJECT_DIR$/public/assets/js/backend/cms/xmjb.js" />
@@ -276,11 +238,13 @@
         <option value="$PROJECT_DIR$/application/admin/view/cms/archives/fields.html" />
         <option value="$PROJECT_DIR$/application/admin/view/cms/archives/add.html" />
         <option value="$PROJECT_DIR$/application/admin/view/cms/archives/add2.html" />
+        <option value="$PROJECT_DIR$/application/admin/controller/cms/Archives.php" />
+        <option value="$PROJECT_DIR$/addons/nkeditor/Nkeditor.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/cms/Rdsystem.php" />
         <option value="$PROJECT_DIR$/addons/cms/controller/Archives.php" />
         <option value="$PROJECT_DIR$/application/index/controller/cms/Diyform.php" />
-        <option value="$PROJECT_DIR$/application/admin/controller/cms/Archives.php" />
+        <option value="$PROJECT_DIR$/application/index/view/cms/diyform/assessment_list.html" />
         <option value="$PROJECT_DIR$/addons/nkeditor/bootstrap.js" />
-        <option value="$PROJECT_DIR$/addons/nkeditor/Nkeditor.php" />
         <option value="$PROJECT_DIR$/public/assets/js/addons.js" />
       </list>
     </option>
@@ -368,20 +332,72 @@
               <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
               <item name="fadmin" type="462c0819:PsiDirectoryNode" />
               <item name="addons" type="462c0819:PsiDirectoryNode" />
-              <item name="nkeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="addons" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="addons" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="default" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="addons" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="default" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
               <item name="fadmin" type="462c0819:PsiDirectoryNode" />
               <item name="addons" type="462c0819:PsiDirectoryNode" />
               <item name="nkeditor" type="462c0819:PsiDirectoryNode" />
-              <item name="controller" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
               <item name="fadmin" type="462c0819:PsiDirectoryNode" />
-              <item name="addons" type="462c0819:PsiDirectoryNode" />
-              <item name="summernote" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
+              <item name="archives" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
@@ -399,15 +415,24 @@
               <item name="fadmin" type="462c0819:PsiDirectoryNode" />
               <item name="public" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
-              <item name="addons" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
               <item name="fadmin" type="462c0819:PsiDirectoryNode" />
               <item name="public" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
-              <item name="addons" type="462c0819:PsiDirectoryNode" />
-              <item name="nkeditor" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fadmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fadmin" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
+              <item name="cms" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -496,16 +521,15 @@
       <workItem from="1557104132187" duration="13918000" />
       <workItem from="1557190155398" duration="9056000" />
       <workItem from="1557213926168" duration="20000" />
-      <workItem from="1557214706143" duration="690000" />
+      <workItem from="1557214706143" duration="23646000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="978881000" />
+    <option name="totallyTimeSpent" value="1001837000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21428572" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -553,101 +577,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/thinkphp/library/think/Cache.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="836">
-          <caret line="197" column="27" selection-start-line="197" selection-start-column="27" selection-end-line="197" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/channel.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/Ajax.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="274" column="45" selection-start-line="274" selection-start-column="45" selection-end-line="274" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/addonxmgsk.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-82" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/project.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-316" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/diydata.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1216" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/diyform.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-244" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/libs/fastadmin-selectpage/selectpage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="2248" column="4" selection-start-line="2248" selection-start-column="4" selection-end-line="2248" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/cms/xmjb/add.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
-          <caret line="36" column="108" selection-start-line="36" selection-start-column="88" selection-end-line="36" selection-end-column="108" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/cms/xmjb/edit.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="30" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/cms/Xmjb.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2736">
-          <caret line="153" column="5" selection-start-line="149" selection-start-column="4" selection-end-line="153" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/model/cms/Xmjb.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="27" column="81" selection-start-line="27" selection-start-column="81" selection-end-line="27" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/xmjb.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="44" column="39" selection-start-line="44" selection-start-column="39" selection-end-line="44" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/index/view/cms/diyform/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4068">
-          <caret line="226" column="23" selection-start-line="213" selection-start-column="20" selection-end-line="226" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/cms/archives/content.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_8.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="460">
@@ -668,16 +597,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/view/cms/archives/add2.html" />
-    <entry file="file://$PROJECT_DIR$/application/index/controller/cms/Diyform.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="350" column="52" selection-start-line="350" selection-start-column="52" selection-end-line="350" selection-end-column="52" />
-          <folding>
-            <element signature="n#style#0;n#td#0;n#tr#3;n#tbody#0;n#table#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/view/cms/archives/add.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1512">
@@ -698,16 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/cms/controller/Archives.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="64" column="21" selection-start-line="64" selection-start-column="21" selection-end-line="64" selection-end-column="21" />
-          <folding>
-            <element signature="e#41#88#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/model/cms/Archives.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
@@ -715,32 +624,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/cms/archives/fields.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="229" selection-start-line="16" selection-start-column="229" selection-end-line="16" selection-end-column="229" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/addons/cms/view/default/show_xmzn.html">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/archives.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8730">
-          <caret line="485" column="54" selection-start-line="485" selection-start-column="54" selection-end-line="485" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/cms/Archives.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="698" column="23" selection-start-line="698" selection-start-column="23" selection-end-line="698" selection-end-column="23" />
-          <folding>
-            <element signature="e#44#76#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/addons/cms/view/default/common/item.html">
       <provider selected="true" editor-type-id="text-editor" />
@@ -769,8 +654,52 @@
     <entry file="file://$PROJECT_DIR$/addons/editable/info.ini">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/nkeditor/info.ini">
+    <entry file="file://$PROJECT_DIR$/vendor/karsonzhang/fastadmin-addons/src/common.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/karsonzhang/fastadmin-addons/src/Addons.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/controller/Index.php">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/addons/nkeditor/js/customplugin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-118">
+          <folding>
+            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#span#0;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#span#1;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/config.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/common/view/tpl/think_exception.tpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-900">
+          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/info.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/addons/nkeditor/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -780,9 +709,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/license.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-576">
+          <caret line="17231" column="12" selection-start-line="17231" selection-start-column="12" selection-end-line="17231" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/addons/nkeditor/assets/nkeditor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-170308">
+        <state relative-caret-position="-3132">
           <folding>
             <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
@@ -888,39 +827,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/karsonzhang/fastadmin-addons/src/common.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/karsonzhang/fastadmin-addons/src/Addons.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/assets/nkeditor.min.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/addons/summernote/config.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/cms/view/default/common/layout.html">
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/assets/js/customplugin.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/summernote/Summernote.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addons/nkeditor/controller/Index.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/addons/nkeditor/js/customplugin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-118">
+        <state>
           <folding>
             <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#span#0;n#form#0;n#div#0;n#div#0;n#!!top" expanded="true" />
@@ -931,42 +846,172 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/summernote/bootstrap.js">
+    <entry file="file://$PROJECT_DIR$/application/index/controller/Index.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/cms/Archives.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1998">
-          <caret line="111" column="6" selection-start-line="107" selection-start-column="8" selection-end-line="111" selection-end-column="6" />
+        <state relative-caret-position="-486" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/cms/controller/Archives.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="482">
+          <caret line="61" column="51" selection-start-line="59" selection-start-column="24" selection-end-line="61" selection-end-column="51" />
+          <folding>
+            <element signature="e#41#88#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/nkeditor/config.php">
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/cms/Archives.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="283" column="39" lean-forward="true" selection-start-line="283" selection-start-column="39" selection-end-line="283" selection-end-column="39" />
+          <folding>
+            <element signature="e#44#76#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/view/cms/diyform/assessment_detail.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/addons/nkeditor/bootstrap.js">
+    <entry file="file://$PROJECT_DIR$/addons/summernote/Summernote.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/view/cms/rdsystem/systemlist.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/view/cms/rdsystem/research.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1710">
-          <caret line="95" column="16" selection-start-line="95" selection-start-column="16" selection-end-line="95" selection-end-column="16" />
+        <state relative-caret-position="738">
+          <caret line="261" column="47" lean-forward="true" selection-start-line="261" selection-start-column="47" selection-end-line="261" selection-end-column="47" />
+          <folding>
+            <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#1;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#2;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#4;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#5;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#8;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/view/cms/diyform/assessment_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="594">
+          <caret line="57" column="139" selection-start-line="57" selection-start-column="117" selection-end-line="57" selection-end-column="139" />
+          <folding>
+            <element signature="n#style#0;n#button#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#1;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#2;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#3;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#4;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#5;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#6;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#7;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#8;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#9;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#10;n#tr#0;n#thead#0;n#table#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#1;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/cms/Rdsystem.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="2448" column="10" selection-start-line="2446" selection-start-column="8" selection-end-line="2448" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/cms/Diyform.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="764">
+          <caret line="366" column="37" selection-start-line="366" selection-start-column="37" selection-end-line="366" selection-end-column="37" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#tr#2;n#tbody#0;n#table#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/addons/nkeditor/Nkeditor.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1044">
+        <state relative-caret-position="854">
           <caret line="59" column="60" selection-start-line="59" selection-start-column="60" selection-end-line="59" selection-end-column="60" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/common/view/tpl/think_exception.tpl">
+    <entry file="file://$PROJECT_DIR$/addons/summernote/bootstrap.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-900">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+        <state relative-caret-position="144">
+          <caret line="8" selection-start-line="8" selection-end-line="11" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/nkeditor/bootstrap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2250">
+          <caret line="28" column="65" selection-start-line="28" selection-start-column="65" selection-end-line="28" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/addon.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="536" column="57" selection-start-line="536" selection-start-column="16" selection-end-line="536" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/cms/archives/fields.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="16" column="229" selection-start-line="16" selection-start-column="229" selection-end-line="16" selection-end-column="229" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/backend/cms/archives.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1396">
+          <caret line="400" column="39" selection-start-line="400" selection-start-column="39" selection-end-line="400" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/assets/js/addons.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="229" column="31" selection-start-line="229" selection-start-column="31" selection-end-line="229" selection-end-column="31" />
+        <state relative-caret-position="782">
+          <caret line="176" selection-start-line="176" selection-end-line="176" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thinkphp/base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="26" column="33" selection-start-line="26" selection-start-column="33" selection-end-line="26" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-252">
+          <caret line="228" column="6" selection-start-line="228" selection-start-column="6" selection-end-line="228" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/cms/view/default/common/layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1864">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/addons/cms/view/default/common/sidebar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-154" />
       </provider>
     </entry>
   </component>
